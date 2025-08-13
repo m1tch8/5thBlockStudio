@@ -1,0 +1,57 @@
+.ytvid-container{
+    aspect-ratio: 16/9;
+    display: block;
+    position: relative;
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+    height: 100%;
+    
+}
+.ytvid-container iframe, .ytvid-container video{
+    aspect-ratio: 16/9;
+    height: 100%;
+    width: inherit;
+    border: 0;
+    
+}
+.ytvid-container img{
+  object-fit: cover;
+  height: 100%;
+}
+.ytvid-container button{
+    position: absolute;
+    display: none;
+    top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  z-index: 3;
+}
+@media (max-width: 1050px) {
+  .ytvid-container button{
+    display: block;
+  }
+}
+.ytvid-container p{
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    font-size: 14px;
+    z-index: 3;
+}
+.ytvid-container div{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    background-image: linear-gradient(to top, black, transparent,transparent)
+    
+}
+.ytvid-container:hover button{
+    display: block;
+}
+.ytvid-container:hover div{
+    background-color: black;
+    opacity: 0.8;
+}

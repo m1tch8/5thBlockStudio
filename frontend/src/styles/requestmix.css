@@ -1,0 +1,41 @@
+
+.page-holder{
+    max-width: 100%;
+    background-color: rgb(66, 66, 66);
+    padding: 30px;
+}
+.first-page{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.input{
+    width: 100%;
+}
+.input input{
+    width: 100%;
+    padding: 14px;
+    box-sizing: border-box;
+    color: black;
+}
+.input input:focus {
+}
+.input span{
+    color: red;
+}
+.input input[data-error="true"]{
+    border: 1px solid red;
+}
+.btns{
+    width: 100%;
+}
+.btns button{
+    width: 50%;
+    color: black;
+    padding: 10px;
+}
+
+.duration{
+    
+}

@@ -1,0 +1,325 @@
+.admin-section{
+    /* width: 100%;
+    height: 100%; */
+    left: 0;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    position: absolute;
+    padding-left: 350px;
+    padding-top: 50px;
+}
+
+.sidebar{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    width: 300px;
+    background-color: #414141;
+    padding-top: 40px;
+
+}
+.sidebar-menu{
+    margin-top: 50px;
+}
+.sidebar-btn{
+    padding: 20px;
+    cursor: pointer;
+}
+.sidebar-btn:hover{
+    background-color: #2b2b2b 
+}
+.sidebar-btn:active{
+    background-color: #1f1f1f 
+}
+.sidebar-btn[data-highlight = "true"]{
+    background-color: #232323
+}
+.display-section{
+    width: 95%;
+    height: 90%;
+    overflow: auto;
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    border-top: 1px solid #414141;
+}
+.add-content-page{
+    display: flex;
+    gap: 50px;
+    margin-top: 50px;
+    
+}
+.transition{
+    transition: max-height 0.5s ease;
+}
+.input-area{
+    width: 45%;
+}
+.input-area textarea{
+    height: 150px;
+}
+.input-area input, .input-area textarea{
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: #232323;
+}
+.input-area input[type = "submit"]{
+    width: 200px;
+    background-color: white;
+    color: black;
+}
+
+.display-area{
+    display:flex;
+    aspect-ratio: 16/9;
+    width: 45%;
+}
+.display-area > iframe{
+    width: 100%; /* scale to "cover" the container */
+    aspect-ratio: 16/9;
+}
+
+
+
+
+.contents-page, .highlighted{
+    display: grid;
+    /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+@media (max-width: 1690px) {
+  .contents-page, .highlighted {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 1430px) {
+  .contents-page, .highlighted {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 1070px) {
+  .contents-page, .highlighted {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.contents-page{
+    padding-bottom: 50px;
+}
+
+.card{
+    background-color: #414141;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.vid-container{
+    aspect-ratio: 16/9;
+    position: relative;
+    
+}
+
+.vid-container iframe, .vid-container video{
+    /* position: absolute; */
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 0;
+    margin: 0;
+}
+.vid-container video{
+    position: absolute;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: block;
+    aspect-ratio: 16 / 9;
+    
+}
+.controls-container {
+    display:flex;
+    justify-content: flex-end;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    gap: 5px;
+    margin-top: auto
+}
+.control-btn{
+    padding: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    background-color: rgb(104, 103, 103);
+    border-radius: 10px;
+}
+
+.card-detail{
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* CONTROL BTN */
+.control-btn:nth-of-type(1){
+    background-color: white;
+    color: black;
+}
+.control-btn:nth-of-type(2){
+    background-color: rgb(0, 140, 255);
+    color: white;
+}
+.control-btn:nth-of-type(3){
+    background-color: rgb(214, 3, 3);
+}
+/* HOVER CONTROL BTN */
+.control-btn:nth-of-type(1):hover{
+    background-color: rgb(211, 208, 208);
+    color: black;
+}
+.control-btn:nth-of-type(2):hover{
+    background-color: rgb(3, 125, 224);
+}
+.control-btn:nth-of-type(3):hover{
+    background-color: rgb(82, 7, 7);
+}
+/* ACTIVE CONTROL BTN */
+.control-btn:nth-of-type(1):active{
+    background-color: rgb(151, 150, 150);
+    color: black;
+}
+.control-btn:nth-of-type(2):active{
+    background-color: rgb(4, 108, 194);
+}
+.control-btn:nth-of-type(3):active{
+    background-color: rgb(59, 5, 5);
+}
+
+/* HIGHLIGHT */
+.control-btn[data-highlight="true"]{
+    background-color:  rgb(230, 176, 0);
+    color: black;
+}
+.control-btn:hover[data-highlight="true"]{
+    background-color:  rgb(230, 176, 0);
+    color: black;
+}
+.control-btn:active[data-highlight="true"]{
+    background-color:  rgb(199, 153, 2);
+    color: black;
+}
+/*  */
+
+.confirmation, .update, .change-password{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 3;
+}
+
+.confirmation-shadow, .update-shadow, .change-password-shadow{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    background-color: black;
+    opacity: 0.5;
+}
+
+.confirmation-container, .update-container, .change-password-container{
+    background-color:#414141;
+    z-index: 5;
+    padding: 50px;
+    border-radius: 10px;
+}
+.confirmation-container button, 
+.update-container button,
+.change-password-container button{
+    padding: 5px;
+    color: black;
+    margin-right: 2px;
+    margin-top: 10px;
+}
+
+.update-container input, .change-password input{
+    color: black;
+    width: 400px;
+    padding: 10px;
+}
+
+
+
+/* ACCOUNT PAGE */
+
+.user-form-container form input[readOnly]{
+    background-color: #cacaca;
+}
+.user-form-container button{
+    color: black;
+    padding: 10px;
+    margin-right: 5px;
+}
+
+.drop-area{
+    background-color: #414141;
+    width: 500px;
+    max-height: 300px;
+    height: 300px;
+    border: 1px solid white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    position: relative;
+}
+
+.drop-area video{
+    width: 100%;
+    height: 100%;
+    max-height: 300px;
+}
+
+.x{
+    position: absolute;
+    z-index: 1;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    top: 0;
+    right: -35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #414141;
+    padding: 0px;
+    cursor: pointer;
+}
+
+.add-content-btn button{
+    padding: 15px;
+    background-color: transparent;
+    border: 1px solid #414141;
+    cursor: pointer;
+}
+.add-content-btn button:hover{
+    background-color: #414141;
+}
+.add-content-btn button:active{
+    background-color: rgb(34, 34, 34)
+}
+.add-content-btn button[data-highlight="true"]{
+    background-color: #414141;
+}

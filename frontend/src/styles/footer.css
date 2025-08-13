@@ -1,0 +1,43 @@
+.footer{
+    height: 250px;
+    position: relative;
+    margin-top: 50px;
+    
+}
+
+.footer-img-container{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: -2;
+}
+.footer-img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    opacity: 0.3;
+}
+.footer-details{
+    position: absolute;
+    text-align: center;
+    bottom: 20px;
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 3;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.shadow{
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    background-image: linear-gradient(to bottom, #232323,transparent);
+    z-index: 2;
+}

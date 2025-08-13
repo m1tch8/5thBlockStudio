@@ -1,0 +1,201 @@
+
+.container{
+    width: 100%;
+}
+.input-container{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 20px;
+}
+.input-field{
+    position: relative;
+    height: 75px;
+    width: 100%;
+    display: flex;
+    padding-bottom: 10px;
+}
+.input-field > input{
+    outline: none;
+    background: transparent;
+    border: 3px solid #969696;
+    color: white;
+    font-size: 16px;
+    padding-left: 20px;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    z-index: 3;
+    transition: 0.2s ease;
+    
+}
+.label-placeholder{
+    color: #969696;
+    position: absolute;
+    padding: 0 10px ;
+    margin: 0 20px;
+    background-color: #232323;
+    display: inline-block;
+    top: 25px;
+    font-size: 16px;
+    transition: 0.2s ease;
+    z-index: 2;
+    white-space: nowrap;
+    border-radius: 5px;
+}
+
+.input-field > span{
+    color: rgb(216, 3, 3);
+    position: absolute;
+    top: 75px;
+    padding: 0 10px;
+    display: none;
+    font-size: 14px;
+}
+
+.input-field > input:focus {
+    border-color: white;
+}
+.input-field > input:focus + .label-placeholder,
+.input-field > input:not(:placeholder-shown) + .label-placeholder{
+    /* background-color: rgb(206, 206, 206); */
+    background-color: white;
+    transform: translate(0px, -30px) scale(0.88);
+    z-index:4;
+    color: black;;
+}
+.input-field > input::placeholder{
+    color: transparent;
+}
+
+
+.input-field input:invalid[focused="true"] ~ span{
+    display: block;
+}
+.input-field input:invalid[focused="true"] {
+    border: 3px solid rgb(216, 3, 3);
+}
+
+@media (max-width: 800px){
+    .input-container{
+        grid-template-columns: auto;
+    }
+    .input-field > input, .label-placeholder{
+        font-size: 14px;
+    }
+}
+
+.submit-btn-container{
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+}
+.submit-custom{
+    font-size: 14px;
+    margin-right: 10px;
+}
+.submit-custom:disabled,
+.submit-custom:disabled:hover{
+    color: rgb(48, 48, 48);
+    background-color: rgb(83, 83, 83);
+    cursor: default;
+}
+.g-recaptcha {
+  margin-top: 5px;
+}
+
+.submit-error{
+    color: rgb(216, 3, 3);
+}
+
+
+@keyframes spin89345 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+.duration-text{
+    padding: 10px;
+}
+.number-fields-container{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 50px;
+}
+
+.mix-style-container{
+    margin-top: 10px;
+}
+.checkboxes{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.checkboxes label{
+    padding: 18px 30px;
+    border: 3px solid #969696;
+    border-radius: 30px;
+    cursor: pointer;
+    color: #969696;
+}
+input[type="checkbox"],
+input[type="radio"]{
+    display: none;
+}
+input[type="checkbox"]:checked + label,
+input[type="checkbox"]:checked:hover + label,
+input[type="radio"]:checked + label,
+input[type="radio"]:checked:hover + label{
+    border-color: white;
+    color: black;
+    background-color: white;
+}
+input[type="checkbox"]:hover + label{
+    border-color: rgb(199, 199, 199);
+    color: rgb(199, 199, 199);
+}
+
+.date-picker-container{
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 20px;
+}
+
+.textarea-container{
+    display: flex;
+}
+.textarea-container > textarea{
+    width: 100%;
+    resize: none;
+    outline: none;
+    background: transparent;
+    border: 3px solid #969696;
+    color: white;
+    font-size: 16px;
+    padding-left: 20px;
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 3;
+    transition: 0.2s ease;
+    height: 200px;
+    margin-bottom: 20px;
+}
+textarea:focus{
+    border-color: white;
+}
+.input-field > input:focus {
+    border-color: white;
+}
+.input-field > input:focus + .label-placeholder,
+.input-field > input:not(:placeholder-shown) + .label-placeholder{
+    /* background-color: rgb(206, 206, 206); */
+    background-color: white;
+    transform: translate(0px, -30px) scale(0.88);
+    z-index:4;
+    color: black;;
+}

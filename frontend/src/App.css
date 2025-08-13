@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Red Hat Display', Arial, Helvetica, sans-serif;
+    /* color: rgb(19, 18, 18); */
+    color: white;
+}
+body{
+    background-color: #232323;
+}
+
+.headings{
+    font-weight: 900;
+    color: #696969;
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+
+/* Transparent Button */
+.transparent-btn{
+    padding: 10px 20px;
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.transparent-btn:hover{
+    background-color: white;
+    color: rgb(29, 29, 29);
+}
+.transparent-btn:active{
+    background-color: rgb(189, 189, 189);
+    color: black;
+    transition: 0s;
+}
+
+/* White Button */
+.white-btn{
+    padding: 10px 20px;
+    background-color: white;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: black;
+    display: inline-block;
+    text-decoration: none;
+}
+.white-btn:hover{
+    background-color: black;
+    color: white;
+}
+.white-btn:active{
+    background-color: rgb(26, 26, 26);
+    transition: 0s;
+    color: white;
+}
+
+.big-btn{
+    font-size: 16px;
+    padding: 20px 30px;
+    border-radius: 10px;
+}
+
+/* Music Card */
+.music-card-container{
+    /* width: 250px; */
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+.music-card-image-container{
+    width: 95%;
+    transition: 0.3s;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+.card-play-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+.card-play-container:hover{
+    opacity: 0.4;
+    background-color: black;
+}
+.music-card-play-btn{
+    width: 100px;
+}
+.music-card-image{
+    width: 100%;
+}
+.music-card-details > p, .music-card-container > button {
+    margin-bottom: 10px;
+}
+
+
+/* SECTION */
+
+.section{
+    margin-top: 150px;
+    max-width: 1300px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Floating Icons */
+
+.icons{
+    display: flex;
+    justify-content: center;
+    gap: 1.5em;
+    left: 0;
+    right: 0;
+    bottom: 2em;
+    z-index: 10;
+    font-size: 1.2em;
+}
+
+
+/* Video Modal */
+
+.video-card{
+    width: 100%;
+    position: relative;
+}
+.video-card-shadow{
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-image: linear-gradient(to top, black, transparent,transparent)
+}
+.youtube-wrapper {
+    display: flex;
+    aspect-ratio: 16/9;
+    width: 100%; /* or any height you want */
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+}
+.youtube-wrapper > iframe{
+    position: absolute;
+  width: 100%; /* scale to "cover" the container */
+  height: 100%;
+  border: 0;
+}
+.youtube-wrapper video{
+   
+    aspect-ratio: 16 / 9;
+    height: 100%;
+    display: block;
+    /* object-fit: cover;
+    height: auto; */
+}
+.video-card-details{
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 3;
+}
+.video-card-details > p{
+    margin-bottom: 5px;
+}
+
+
+
+.submit-modal{
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    position: fixed;
+    z-index: 9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.shadow-submit-modal{
+    position:absolute;
+    background-color: black;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    opacity: 0.8;
+}
+
+.status-modal{
+    z-index: 10;
+    width: 450px;
+    height: 200px;
+    border-radius: 20px;
+    background-color:  #232323;
+    padding: 30px 0 30px;
+    margin: 30px;
+    display: flex;
+    justify-content: center;
+}
+.status-details-wrapper{
+    height: 100%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.status-details-wrapper button{
+    outline: none;
+    border-radius: 15px;
+    padding: 10px;
+    font-size: 14px;
+    color: black;
+    border: 0px solid black ;
+    transition: 0.1s ease;
+    cursor: pointer;
+}
+.status-details-wrapper button:hover{
+    color: white;
+    background-color: black;
+}
+
+@media (max-width: 800px){
+    .headings{
+        font-size: 30px;
+    }
+}

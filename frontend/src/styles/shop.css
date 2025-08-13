@@ -1,0 +1,48 @@
+.music-items-container{
+    display: grid; 
+    grid-template-columns: auto auto auto auto;
+}
+.empty{
+    font-weight: 900;
+    color: #696969;
+    font-size: 90px;
+    margin-bottom: 20px;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 800px){
+    .music-items-container{
+        grid-template-columns: auto auto auto;
+    }
+    .empty{
+        font-size: 60px ;
+    }
+}
+
+@media (max-width: 650px){
+    .music-items-container{
+        grid-template-columns: auto auto auto;
+    }
+    .empty{
+        font-size: 50px ;
+    }
+}
+
+@media (max-width: 500px){
+    .music-items-container{
+        grid-template-columns: auto auto ;
+    }
+    .empty{
+        font-size: 30px ;
+    }
+}
+
+@media (max-width: 400px){
+    .music-items-container{
+        grid-template-columns: auto;
+    }
+}
+

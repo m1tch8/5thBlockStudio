@@ -1,0 +1,40 @@
+.login-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px;
+}
+.login-wrapper{
+    height: 300px;
+    width: 500px;
+    background-color: rgb(49, 49, 49);
+    padding: 50px;
+}
+.input-wrapper{
+    width: 100%;
+}
+.input-wrapper input{
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 20px;
+    color: black;
+}
+.login-btn{
+    padding: 10px;
+    color: black;
+}
+.title{
+    margin-bottom: 30px;
+}
+
+
+@media (max-width: 500px){
+    .login-wrapper{
+        padding: 30px;
+    }
+}

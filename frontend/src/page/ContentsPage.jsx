@@ -3,7 +3,7 @@ import useAPI from "../Hooks/useAPI";
 import useAuth from "../Hooks/useAuth";
 import StatusModal from '../Components/StatusModal'
 
-function Card({values, highlightClickHandle, updateContent, deleteContent}){
+function Card({values, setHighlight, updateContent, deleteContent}){
     const {_id, videoId, siValue, title, category, highlight, type} = values; // content data values
     const [isConfirmDelete, setIsConfirmDelete] = useState(false)    ;
     const [isUpdating, setIsUpdating] = useState(false)            // triggers confirmation modal
@@ -12,19 +12,24 @@ function Card({values, highlightClickHandle, updateContent, deleteContent}){
         setIsConfirmDelete(!isConfirmDelete) //Opens/Closes Delete Confirmation
     }
 
-    //Triggers when clicking YES in Delete Confirmation
+    // Confirm Delete Function
     function confirmDeleteHandle(){
         setIsConfirmDelete(false) //Closes Delete Confirmation
         deleteContent(_id);     //function call for content deletion
     }
 
+    // Triggers Delete Function after confirming delete
     function updateOnclick(){
         setIsUpdating(!isUpdating)
     }
 
+    // Triggers Update Content Function after confirming update
     function confirmUpdateHandle(values){
         setIsUpdating(false)
         updateContent(_id, values)
+    }
+    function highlightClickHandle(){
+        setHighlight(_id)
     }
     return(
         <>
@@ -49,7 +54,7 @@ function Card({values, highlightClickHandle, updateContent, deleteContent}){
                 <p>{category}</p>
             </div>
             <div className="controls-container">
-                <div className="control-btn" data-highlight={`${highlight}`} onClick={()=>highlightClickHandle(_id)}>Highlight</div>
+                <div className="control-btn" data-highlight={`${highlight}`} onClick={highlightClickHandle}>Highlight</div>
                 <div className="control-btn" onClick={updateOnclick}>Update</div>
                 <div className="control-btn" onClick={openDeleteClickHandle}>Delete</div>
             </div>
@@ -81,11 +86,7 @@ function Confirmation({openDeleteClickHandle, confirmDeleteHandle}){
 function Update({title, category, updateOnclick, confirmUpdateHandle}){
     const [tmpTitle, setTmpTitle] = useState(title);
     const [tmpCategory, setTmpCategory] = useState(category)
-
-    useEffect(()=>{
-        
-    },[])
-
+    
     return(
         <div className="update">
             <div className="update-container">
@@ -116,13 +117,13 @@ export default function ContentsPage({setIsLoading}){
     const {accessToken, refresh} = useAuth();
 
     // sets highlight
-    async function highlightClickHandle(id){
-        // triggers loading screen
-        setIsLoading(true)
+    async function setHighlight(id){
+        setIsLoading(true) // triggers loading screen
 
         let statusError;
         let x = 2;
 
+        // Runs http request twice if token expired to generate new token
         do {
             console.log(statusError)
             let token = statusError === 401 ? await refresh() : accessToken;
@@ -135,12 +136,11 @@ export default function ContentsPage({setIsLoading}){
                 }
             })
             .then(result => {
-                //updates the data content state to trigger re-render everytime the data changes
-                setContent(prev => prev.map(content => content._id === id ? result.data : content))
+                setContent(prev => prev.map(content => content._id === id ? result.data : content)) //updates data state that also trigger re-render and updates the UI
                 setIsError(false)
                 setOpen(true)
                 setStatuMessage(result.data.highlight ? "Added to Highlights" : "Removed to Highlights")
-                x--
+                x-- // stops the loop if request status is 200
             })
             .catch(err => {
                 let errMessage = err.response?.data.message
@@ -148,26 +148,23 @@ export default function ContentsPage({setIsLoading}){
                 console.error(errMessage);
                 
                 if (!statusError === 401){
-                    x--; // stops the loop if there's no error
+                    x--; // stops the loop if not Unauthorized
                 }
                 if (statusError === 401 && x === 1){
                     logout();   //Logouts after the request takes two Unauthorized request
                                 //This means it is unable to generate new accessToken
-                                //Refresh token expired or didn't exist
+                                //Refresh token expired
                 }
                 else{
                     setStatuMessage("There is an Internal Error. Try to refresh")
                     setIsError(true)
-                    
-                    
                 }
             })
             
             x--;
         }while (x > 0)
 
-        // stops loading screen
-        setIsLoading(false)
+        setIsLoading(false) // stops loading screen
         setOpen(true)
     }
     
@@ -177,8 +174,11 @@ export default function ContentsPage({setIsLoading}){
 
         let x = 2;
         let statusError;
+
+        // Runs http request twice if token expired to generate new token
         do{
             let token = statusError === 401 ? await refresh() : accessToken;
+            
             // updating data content from the api
             await api.put(`/content/${id}`, values, {
                 headers: {
@@ -187,10 +187,10 @@ export default function ContentsPage({setIsLoading}){
                 }
             })
             .then(result => {
-                setContent(prev => prev.map(content => content._id === id ? result.data : content))
+                setContent(prev => prev.map(content => content._id === id ? result.data : content)) //updates data state that also trigger re-render and updates the UI
                 setStatuMessage("Updated Successfully")
                 setIsError(false)
-                x--
+                x-- // stops the loop if request status is 200
             })
             .catch(err => {
                 let errMessage = err.response?.data.message
@@ -198,7 +198,7 @@ export default function ContentsPage({setIsLoading}){
                     console.error(errMessage);
                     
                     if (!statusError === 401){
-                        x--; // stops the loop if there's no error
+                        x--; // stops the loop if not Unauthorized
                     }
                     if (statusError === 401 && x === 1){
                         logout();   //Logouts after the request takes two Unauthorized request
@@ -227,8 +227,10 @@ export default function ContentsPage({setIsLoading}){
         let x = 2;
         let statusError;
 
+        // Runs http request twice if token expires to generate new token
         do{
             let token = statusError === 401 ? await refresh() : accessToken
+
             // deleting content data from the API
             await api.delete(`content/${id}`,{
                 headers:{
@@ -240,14 +242,14 @@ export default function ContentsPage({setIsLoading}){
                 setContent(prev => prev.filter(content => content._id !== id));
                 setStatuMessage("Deleted Successfully")
                 setIsError(false)
-                x--
+                x-- //stops the loop if status 200
             })
             .catch(err=>{
                 let errMessage = err.response?.data.message
                 statusError = err.response.status;
                 console.error(errMessage);
                 if (!statusError === 401){
-                    x--; // stops the loop if there's no error
+                    x--; // stops the loop if not Unauthorized
                 }
                 if (statusError === 401 && x === 1){
                     logout();   //Logouts after the request takes two Unauthorized request
@@ -269,7 +271,6 @@ export default function ContentsPage({setIsLoading}){
 
     // loads content data
     useEffect(()=>{
-
         async function fetchData(){
             setIsLoading(true)  // Triggers loading screen
             
@@ -301,25 +302,44 @@ export default function ContentsPage({setIsLoading}){
         setCategory(e.target.value)
     }
     
-    // Content data to be displayed with filtered category
-    let toDisplay;
+    // All Cards Display filtered with Category
+    let toDisplayAllContent;
     if(content){
-        toDisplay = category === 'All' ? 
+        toDisplayAllContent = category === 'All' ? 
             content
-            .map(value => 
-                <Card key={value._id} 
-                values={value} 
-                highlightClickHandle={highlightClickHandle}
-                updateContent={updateContent}
-                deleteContent={deleteContent}/>)
-                    :
+                .map(value => 
+                    <Card 
+                        key={value._id} 
+                        values={value} 
+                        setHighlight={setHighlight}
+                        updateContent={updateContent}
+                        deleteContent={deleteContent}
+                    />)
+            :
             content
-            .map(value => value.category === category &&
-                <Card key={value._id} 
-                values={value} 
-                highlightClickHandle={highlightClickHandle}
-                updateContent={updateContent}
-                deleteContent={deleteContent}/>)
+                .map(value => value.category === category &&
+                    <Card 
+                        key={value._id} 
+                        values={value} 
+                        setHighlight={setHighlight}
+                        updateContent={updateContent}
+                        deleteContent={deleteContent}
+                    />)
+    }
+
+    // Highlighted Cards Display
+    let toDisplayHighlightedContent;
+    if(content){
+        toDisplayHighlightedContent = content.filter(value => value.highlight)
+                    .sort((a,b) => a.order - b.order)
+                    .map(value => 
+                        <Card 
+                            key={value._id} 
+                            values={value} 
+                            setHighlight={setHighlight}
+                            updateContent={updateContent}
+                            deleteContent={deleteContent}
+                        />) 
     }
     
     if (otherCategory){
@@ -337,14 +357,7 @@ export default function ContentsPage({setIsLoading}){
         }} className="headings">HIGHLIGHTED</h4>
 
         <div className="highlighted" style={{marginBottom: '30px'}}>
-            {content &&
-                content.filter(value => value.highlight)
-                .sort((a,b) => a.order - b.order)
-                .map(value => <Card key={value._id} values={value} 
-                        highlightClickHandle={highlightClickHandle}
-                        updateContent={updateContent}
-                        deleteContent={deleteContent}/>) 
-            }
+            {toDisplayHighlightedContent}
         </div>
 
         <h4 style={{
@@ -371,7 +384,7 @@ export default function ContentsPage({setIsLoading}){
                     </option>)}
         </select>
         <div className="contents-page">
-            {toDisplay}
+            {toDisplayAllContent}
         </div>
         <StatusModal open={open} handleClose={handleClose} isError={isError} statusMessage={statusMessage}/>
         

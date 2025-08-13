@@ -8,6 +8,7 @@ import { useState, useEffect } from "react"
 import VidCard from "../Components/VidCard.jsx"
 import { useNavigate } from "react-router-dom"
 import VideoModal from "../Components/VideoModal.jsx"
+import LoadingScreen from "../Components/LoadingScreen.jsx"
 
 function HeroSection(){
 
@@ -74,10 +75,13 @@ function FeaturedCard({values}){
 function FeaturedSection(){
 
     const [videoValues, setVideoValues] = useState();
+    const [isLoading, setIsLoading] = useState()
 
+    // fetching content data from api
     useEffect(()=>{
+        setIsLoading(true)
         const fetchData = async ()=>{
-            axios.get('http://localhost:8888/api/content?highlight=true')
+            await axios.get('http://localhost:8888/api/content?highlight=true')
             .then(response => {
                 setVideoValues(response.data);
                 console.log(response.data)
@@ -85,7 +89,7 @@ function FeaturedSection(){
             .catch(error => console.error(error));
         }
         fetchData()
-        
+        setIsLoading(false)
     },[])
     
     return(
@@ -93,15 +97,6 @@ function FeaturedSection(){
             <div className="featured-section section">
                 <h1 className="headings">FEATURED MIX</h1>
                 <div className="featured-container">
-                    
-                    {/* <div className="main">
-                        
-                        {videoValues && <VideoCard {...videoValues[0]} style={{height:'100%'}}/>}
-                    </div>
-                    <div className="secondary">
-                        {videoValues && <VideoCard {...videoValues[1]}/>}
-                        {videoValues && <VideoCard {...videoValues[2]}/>}
-                    </div> */}
                     <div className="main">
                         {videoValues && <FeaturedCard values={videoValues[0]}/>}
                     </div>
@@ -110,9 +105,8 @@ function FeaturedSection(){
                         {videoValues && <VidCard values={videoValues[2]} autoplay={true}/>}
                     </div>
                 </div>
-                
             </div>
-            
+            {isLoading && <LoadingScreen/>}
         </>
     )
 }
@@ -195,8 +189,6 @@ export default function Home(){
             <FeaturedSection/>
             <a href="/outputs" className="show-more-link"> 
                 <div className="show-more">
-                    {/* <img src="../src/assets/generals-hero-image.png" alt="" /> */}
-
                     <video loop muted autoPlay >
                         <source src="../../src/assets/[Front Row] NDDU Generals  Philippines  Body Rock Asia 2025.mp4"/>
                     </video>
@@ -207,7 +199,6 @@ export default function Home(){
                     
                 </div>
             </a>
-            {/* <ShopSection/> */} 
             <BannerSection/>
             <Footer/>
         </>

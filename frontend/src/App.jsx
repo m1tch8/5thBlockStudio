@@ -10,7 +10,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import './App.css'
 import { AuthProvider } from './Contexts/AuthContext.jsx'
 import ProtectedRoute from './Contexts/ProtectedRoute.jsx'
-import RequestMix from './page/RequestMix.jsx'
 
 function App() {
   return (
@@ -22,7 +21,6 @@ function App() {
           <Route path="/request" element ={<Request/>}/>
           <Route path="/shop" element ={<Shop/>}/>
           <Route path="/outputs" element ={<Outputs/>}/>
-          <Route path="/requestmix" element ={<RequestMix/>}/>
 
           <Route path="/admin-login" element ={<AdminLogin/>}/>
           <Route path="/admin" element={

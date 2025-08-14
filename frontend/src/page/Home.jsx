@@ -74,7 +74,7 @@ function FeaturedCard({values}){
 
 function FeaturedSection(){
 
-    const [videoValues, setVideoValues] = useState();
+    const [videoValues, setVideoValues] = useState()
     const [isLoading, setIsLoading] = useState()
 
     // fetching content data from api
@@ -83,10 +83,10 @@ function FeaturedSection(){
         const fetchData = async ()=>{
             await axios.get('http://localhost:8888/api/content?highlight=true')
             .then(response => {
-                setVideoValues(response.data);
+                setVideoValues(response.data)
                 console.log(response.data)
             })
-            .catch(error => console.error(error));
+            .catch(error => console.error(error))
         }
         fetchData()
         setIsLoading(false)

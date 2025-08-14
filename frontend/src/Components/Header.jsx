@@ -42,35 +42,35 @@ export function HamburgerMenu(){
 
 export default function Header(){
 
-    const [toggleMenu, setToggleMenu] = useState(false);
+    const [toggleMenu, setToggleMenu] = useState(false)
 
-    const navbarRef = useRef(null);
+    const navbarRef = useRef(null)
 
     useEffect(() => {
-    let prevWindowY = window.scrollY;
+    let prevWindowY = window.scrollY
     
     function handleScroll() {
-        const navbar = navbarRef.current;
-        if (!navbar) return;
+        const navbar = navbarRef.current
+        if (!navbar) return
 
         if (window.scrollY > 100){
-            navbar.classList.add('hidden');
+            navbar.classList.add('hidden')
         }
         else{
-            navbar.classList.remove('hidden');
+            navbar.classList.remove('hidden')
         }
     }
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll)
 
     return () => {
-        window.removeEventListener('scroll', handleScroll);
-    };
-    }, []);
+        window.removeEventListener('scroll', handleScroll)
+    }
+    }, [])
 
 
     function toggleClick(){
-        setToggleMenu(!toggleMenu);
+        setToggleMenu(!toggleMenu)
     }
 
     return(

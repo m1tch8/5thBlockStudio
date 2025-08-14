@@ -1,15 +1,15 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 import useAuth from "../Hooks/useAuth"
-import useAPI from "../Hooks/useAPI";
-import { useEffect, useRef, useState } from "react";
+import useAPI from "../Hooks/useAPI"
+import { useEffect, useRef, useState } from "react"
 import '../styles/admin.css'
-import Logo from "../Components/Logo";
-import LoadingScreen from "../Components/LoadingScreen";
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import AddContentPage from "./AddContentPage";
-import AccountPage from "./AccountPage";
-import ContentsPage from "./ContentsPage";
+import Logo from "../Components/Logo"
+import LoadingScreen from "../Components/LoadingScreen"
+import Alert from '@mui/material/Alert'
+import Snackbar from '@mui/material/Snackbar'
+import AddContentPage from "./AddContentPage"
+import AccountPage from "./AccountPage"
+import ContentsPage from "./ContentsPage"
 
 function SideBar(prop){
     const { onDisplayHandle, onDisplay } = prop
@@ -36,30 +36,30 @@ export default function Admin(){
         category: '',
         videoId: '',
         siValue: ''
-    });
+    })
     
     
     function onDisplayHandle(e){
-        const toDisplay = e.target.innerHTML;
-        setOnDisplay(toDisplay);
+        const toDisplay = e.target.innerHTML
+        setOnDisplay(toDisplay)
     }
-    let pageOnDisplay;
+    let pageOnDisplay
     
     switch (onDisplay){
         case "Contents":
             pageOnDisplay = <ContentsPage setIsLoading={setIsLoading}/>
-            break;
+            break
         case "Add Content":
             pageOnDisplay = <AddContentPage contentFieldsRef={contentFieldsRef} 
                                             setIsLoading={setIsLoading}
                                             />
-            break;
+            break
         case "Account":
             pageOnDisplay = <AccountPage setIsLoading={setIsLoading}/>
-            break;
+            break
         default:
             pageOnDisplay = <ContentsPage/>
-            break;
+            break
     }
     return(
         <>

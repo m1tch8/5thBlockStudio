@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from "react";
-import useAPI from "../Hooks/useAPI";
-import useAuth from "../Hooks/useAuth";
-import StatusModal from "../Components/StatusModal";
+import { useEffect, useRef, useState } from "react"
+import useAPI from "../Hooks/useAPI"
+import useAuth from "../Hooks/useAuth"
+import StatusModal from "../Components/StatusModal"
 
 function ChangePassword({setToggleChangePass, setIsError, setOpen, setStatusMessage}){
     const [oldPass, setOldPass] = useState('')
     const [newPass, setNewPass] = useState('')
-    const {accessToken} = useAuth();
-    const api = useAPI();
+    const {accessToken} = useAuth()
+    const api = useAPI()
 
     function oldPassOnChange(e){
         setOldPass(e.target.value)
@@ -62,12 +62,12 @@ function ChangePassword({setToggleChangePass, setIsError, setOpen, setStatusMess
 
 export default function AccountPage({setIsLoading}){
     const [userDetails, setUserDetails] = useState(null)
-    const {accessToken, refresh, logout} = useAuth();
+    const {accessToken, refresh, logout} = useAuth()
     const [toggleChangePass, setToggleChangePass] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
-    const [isError, setIsError] = useState();               // checks if there is error in submission
-    const [open, setOpen] = useState();                     // triggers Snackbar Alert to appear
-    const [statusMessage, setStatusMessage] = useState();    // sets status message to Snackbar Alert every http request
+    const [isError, setIsError] = useState()               // checks if there is error in submission
+    const [open, setOpen] = useState()                     // triggers Snackbar Alert to appear
+    const [statusMessage, setStatusMessage] = useState()    // sets status message to Snackbar Alert every http request
     const editRef = useRef()
     const userDetailsRef = useRef({})
     const api = useAPI()
@@ -76,10 +76,10 @@ export default function AccountPage({setIsLoading}){
     //Loads logged current user
     useEffect(()=>{
         async function getUser(){
-            setIsLoading(true);
+            setIsLoading(true)
 
-            let x = 2;
-            let statusError;
+            let x = 2
+            let statusError
             //If token is expired, it will run 2 times to get new token
             do{
                 let token = statusError ? await refresh() : accessToken
@@ -89,26 +89,26 @@ export default function AccountPage({setIsLoading}){
                     }
                 })
                 .then(result =>{
-                    setUserDetails(result.data);
+                    setUserDetails(result.data)
                 })
                 .catch(err =>{
                     if(!statusError === 401){
-                        x--;
+                        x--
                     }
                     if(statusError === 401 && x === 1){
-                        logout();
+                        logout()
                     }
-                    statusError = err.response.status;
+                    statusError = err.response.status
                     console.error(err.message)
-                });
-                x--;
+                })
+                x--
             } while(x > 0)
 
-            setIsLoading(false);
+            setIsLoading(false)
         }
-        getUser();
+        getUser()
         
-    },[]);
+    },[])
 
     const textStyle = {
         padding: '10px',
@@ -147,7 +147,7 @@ export default function AccountPage({setIsLoading}){
     }
 
     function editOnClick(){
-        setIsEdit(true);
+        setIsEdit(true)
         editRef.current.focus()
         //saves the previous email and username
         userDetailsRef.current = {
@@ -166,11 +166,11 @@ export default function AccountPage({setIsLoading}){
     //Auto close Snackbar Alert
     const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
-        return;
+        return
         }
 
-        setOpen(false);
-    };
+        setOpen(false)
+    }
 
     return(
         <>

@@ -57,12 +57,12 @@ export default function VideoModal({modalClick, videoId, siValue, type}){
     useEffect(()=>{
         const handleEscape = (event)=>{
             if(event.key === "Escape"){
-                modalClick();
+                modalClick()
             }
         }
-        document.addEventListener('keyup', handleEscape);
+        document.addEventListener('keyup', handleEscape)
         return ()=>{
-            document.removeEventListener('keyup', handleEscape);
+            document.removeEventListener('keyup', handleEscape)
         }
         
     },[])

@@ -1,42 +1,42 @@
-import Header from '../Components/Header';
-import Footer from '../Components/Footer';
-import '../styles/request.css';
-import { useRef, useState, useEffect } from 'react';
-import emailjs from '@emailjs/browser';
-import ReCAPTCHA from 'react-google-recaptcha';
-import SubmitModal from '../Components/SubmitModal';
+import Header from '../Components/Header'
+import Footer from '../Components/Footer'
+import '../styles/request.css'
+import { useRef, useState, useEffect } from 'react'
+import emailjs from '@emailjs/browser'
+import ReCAPTCHA from 'react-google-recaptcha'
+import SubmitModal from '../Components/SubmitModal'
 
 function InputField(props){
-    const {label, errorMsg, placeholder, focused, ...inputProps} = props;
-    const [stateFocused, setStateFocused] = useState(focused);    
-    const isDateInput = inputProps.type === 'date';
-    const [currentType, setCurrentType] = useState(inputProps.type);
+    const {label, errorMsg, placeholder, focused, ...inputProps} = props
+    const [stateFocused, setStateFocused] = useState(focused)    
+    const isDateInput = inputProps.type === 'date'
+    const [currentType, setCurrentType] = useState(inputProps.type)
 
     useEffect(() => {
-        setStateFocused(focused);
-    }, [focused]);
+        setStateFocused(focused)
+    }, [focused])
 
     useEffect(() => {
         if (isDateInput && !inputProps.value && !inputProps.defaultValue) {
-            setCurrentType('text');
+            setCurrentType('text')
         }
-    }, [isDateInput, inputProps.value, inputProps.defaultValue]);
+    }, [isDateInput, inputProps.value, inputProps.defaultValue])
 
     function onChange(e){
         if (e.target.value){
-            setStateFocused(true);
+            setStateFocused(true)
         }
     }
     function handleBlur(e){
-        setStateFocused(true);
+        setStateFocused(true)
         if (isDateInput && !e.target.value) {
-            setCurrentType('text');
+            setCurrentType('text')
         }
     }
     
     function handleFocus() {
         if (isDateInput) {
-            setCurrentType('date');
+            setCurrentType('date')
         }
     }
 
@@ -57,7 +57,7 @@ function InputField(props){
     )
 }
 function Checkbox(props){
-    const {value, id, ...prop} = props;
+    const {value, id, ...prop} = props
 
     return(
         <>
@@ -67,16 +67,16 @@ function Checkbox(props){
     )
 }
 export default function Request(){
-    const [isLoading, setIsLoading] = useState(false);
-    const [submitStatus, setSubmitStatus] = useState(false);
-    const [capVal, setCapVal] = useState(null);
+    const [isLoading, setIsLoading] = useState(false)
+    const [submitStatus, setSubmitStatus] = useState(false)
+    const [capVal, setCapVal] = useState(null)
     const [submitError, setSubmitError] = useState(
         {
             error: false,
             errorMsg: ''
         }
-    );
-    const scrollBackRef = useRef();
+    )
+    const scrollBackRef = useRef()
     const [inputs, setInputs] = useState([ 
         {
             id: 1,
@@ -214,8 +214,8 @@ export default function Request(){
         },
 
     ])
-    const errorRef = useRef([]) ;
-    const form = useRef();
+    const errorRef = useRef([]) 
+    const form = useRef()
     const found = [
         {
             id: 'instagram',
@@ -270,13 +270,13 @@ export default function Request(){
     ]
     //Form Submission
     function onClickSubmit(e){ 
-        e.preventDefault();
+        e.preventDefault()
         // checking if validationMessage contains value in each input fields
-        let thereIsError = false;
+        let thereIsError = false
         for (let x = 0; x < errorRef.current.length; x++) {
-            const input = errorRef.current[x];
+            const input = errorRef.current[x]
             if (input && input.validationMessage) {
-                thereIsError = true;
+                thereIsError = true
                 setInputs(prevInputs => prevInputs.map((inp, index) => {
                     if(index === x){
                         return { ...inp, focused: true}
@@ -284,58 +284,58 @@ export default function Request(){
                     else{
                         return inp
                     }
-                }));
+                }))
             }
         }
         if(thereIsError){
-            setSubmitError({error: true, errorMsg: 'please Fill up form correctly.'});
-            scrollBackRef.current?.scrollIntoView({ behavior: 'smooth' });
+            setSubmitError({error: true, errorMsg: 'please Fill up form correctly.'})
+            scrollBackRef.current?.scrollIntoView({ behavior: 'smooth' })
         }else{
-            setSubmitError({error: false, errorMsg: ''});
+            setSubmitError({error: false, errorMsg: ''})
             setIsLoading(true)
         }
     }
     //Captcha On Change
     function recaptchaOnChange(result){
-        setCapVal(result);
+        setCapVal(result)
     }
 
     useEffect(()=>{ //Sending Form to Email
         if(isLoading=== true){
             emailjs
-            .sendForm(process.env.REACT_APP_EMAILJS_SERVICE_ID, process.env.REACT_APP_EMAILJS_TEMPLATE_ID, form.current,{
-                publicKey: process.env.REACT_APP_EMAILJS_PUBLIC_KEY,
+            .sendForm("service_t50laqt", 'template_wi4fan5', form.current,{
+                publicKey: 'CiLIpAZrfvaLUjNb3',
             })
             .then(
                 () => {
-                console.log('SUCCESS!');
-                setSubmitStatus(true);
+                console.log('SUCCESS!')
+                setSubmitStatus(true)
                 },
                 (error) => {
-                console.log('FAILED...', error.text);
-                setSubmitError({error: true, errorMsg: 'There is something wrong. Unable to send request.'});
-                setIsLoading(false);
+                console.log('FAILED...', error.text)
+                setSubmitError({error: true, errorMsg: 'There is something wrong. Unable to send request.'})
+                setIsLoading(false)
                 },
-            );
+            )
 
             const sampInterval = setInterval(() => {
-                setSubmitStatus(true);
-                clearInterval(sampInterval);
-            }, 3000);            
+                setSubmitStatus(true)
+                clearInterval(sampInterval)
+            }, 3000)            
         }
 
     },[isLoading])
 
     const getTomorrowDate = () => {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1); // Add one day to today's date
-        const dd = String(tomorrow.getDate()).padStart(2, '0');
-        const mm = String(tomorrow.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed, so add 1
-        const yyyy = tomorrow.getFullYear();
-        return `${yyyy}-${mm}-${dd}`;
-    };
-    const minDate = getTomorrowDate();
+        const today = new Date()
+        const tomorrow = new Date(today)
+        tomorrow.setDate(today.getDate() + 1) // Add one day to today's date
+        const dd = String(tomorrow.getDate()).padStart(2, '0')
+        const mm = String(tomorrow.getMonth() + 1).padStart(2, '0') // Month is 0-indexed, so add 1
+        const yyyy = tomorrow.getFullYear()
+        return `${yyyy}-${mm}-${dd}`
+    }
+    const minDate = getTomorrowDate()
 
     return(
         <>

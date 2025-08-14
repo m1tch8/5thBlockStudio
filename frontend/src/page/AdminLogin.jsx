@@ -1,17 +1,17 @@
 
-import '../styles/adminLogin.css';
+import '../styles/adminLogin.css'
 import Logo from '../Components/Logo'
-import axios from 'axios';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import useAuth from '../Hooks/useAuth.jsx';
-import useAPI from '../Hooks/useAPI';
+import axios from 'axios'
+import { useNavigate, Navigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import useAuth from '../Hooks/useAuth.jsx'
+import useAPI from '../Hooks/useAPI'
 
 
 export default function AdminLogin(){
-    const api = useAPI();
+    const api = useAPI()
     const {isAuthenticated, accessToken, login, authLoading} = useAuth()
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(null)
     const navigate = useNavigate()
 
     if (isAuthenticated){
@@ -22,12 +22,12 @@ export default function AdminLogin(){
     async function loginHandle(e){
         setError(null)
         e.preventDefault()
-        const form = e.target;
+        const form = e.target
         const formData = new FormData(form)
-        const username = formData.get('username');
-        const password = formData.get('password');
+        const username = formData.get('username')
+        const password = formData.get('password')
         
-        const success = await login(username, password);
+        const success = await login(username, password)
         if (!success.success){
             setError(success.errMessage)
         }

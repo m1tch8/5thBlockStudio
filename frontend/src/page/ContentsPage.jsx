@@ -1,11 +1,11 @@
-import { useActionState, useEffect, useState } from "react";
-import useAPI from "../Hooks/useAPI";
-import useAuth from "../Hooks/useAuth";
+import { useActionState, useEffect, useState } from "react"
+import useAPI from "../Hooks/useAPI"
+import useAuth from "../Hooks/useAuth"
 import StatusModal from '../Components/StatusModal'
 
 function Card({values, setHighlight, updateContent, deleteContent}){
-    const {_id, videoId, siValue, title, category, highlight, type} = values; // content data values
-    const [isConfirmDelete, setIsConfirmDelete] = useState(false)    ;
+    const {_id, videoId, siValue, title, category, highlight, type} = values // content data values
+    const [isConfirmDelete, setIsConfirmDelete] = useState(false)    
     const [isUpdating, setIsUpdating] = useState(false)            // triggers confirmation modal
     
     function openDeleteClickHandle(){
@@ -15,7 +15,7 @@ function Card({values, setHighlight, updateContent, deleteContent}){
     // Confirm Delete Function
     function confirmDeleteHandle(){
         setIsConfirmDelete(false) //Closes Delete Confirmation
-        deleteContent(_id);     //function call for content deletion
+        deleteContent(_id)     //function call for content deletion
     }
 
     // Triggers Delete Function after confirming delete
@@ -40,7 +40,7 @@ function Card({values, setHighlight, updateContent, deleteContent}){
                     src={`https://www.youtube.com/embed/${videoId}?si=${siValue}` }
                     title="YouTube video player" 
                     frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;" 
                     referrerpolicy="strict-origin-when-cross-origin" 
                     allowfullscreen></iframe>
                 }
@@ -84,7 +84,7 @@ function Confirmation({openDeleteClickHandle, confirmDeleteHandle}){
     )
 }
 function Update({title, category, updateOnclick, confirmUpdateHandle}){
-    const [tmpTitle, setTmpTitle] = useState(title);
+    const [tmpTitle, setTmpTitle] = useState(title)
     const [tmpCategory, setTmpCategory] = useState(category)
     
     return(
@@ -106,27 +106,27 @@ function Update({title, category, updateOnclick, confirmUpdateHandle}){
 }
 
 export default function ContentsPage({setIsLoading}){
-    const [isError, setIsError] = useState();               // checks if there is error in submission
-    const [open, setOpen] = useState();                     // triggers Snackbar Alert to appear
-    const [statusMessage, setStatuMessage] = useState();    // sets status message to Snackbar Alert every http request
-    const [content, setContent] = useState();               // content data initialization
-    const [category, setCategory] = useState('All');
+    const [isError, setIsError] = useState()               // checks if there is error in submission
+    const [open, setOpen] = useState()                     // triggers Snackbar Alert to appear
+    const [statusMessage, setStatuMessage] = useState()    // sets status message to Snackbar Alert every http request
+    const [content, setContent] = useState()               // content data initialization
+    const [category, setCategory] = useState('All')
     let categories = ['All']
     let otherCategory = content ? [...new Set(content.map(item => item.category))].sort() : null
-    const api = useAPI();
-    const {accessToken, refresh} = useAuth();
+    const api = useAPI()
+    const {accessToken, refresh} = useAuth()
 
     // sets highlight
     async function setHighlight(id){
         setIsLoading(true) // triggers loading screen
 
-        let statusError;
-        let x = 2;
+        let statusError
+        let x = 2
 
         // Runs http request twice if token expired to generate new token
         do {
             console.log(statusError)
-            let token = statusError === 401 ? await refresh() : accessToken;
+            let token = statusError === 401 ? await refresh() : accessToken
 
             // updating data from the API (highlight attribute to be specific)
             await api.put(`/content/${id}?highlight=true`,{
@@ -144,14 +144,14 @@ export default function ContentsPage({setIsLoading}){
             })
             .catch(err => {
                 let errMessage = err.response?.data.message
-                statusError = err.response.status;
-                console.error(errMessage);
+                statusError = err.response.status
+                console.error(errMessage)
                 
                 if (!statusError === 401){
-                    x--; // stops the loop if not Unauthorized
+                    x-- // stops the loop if not Unauthorized
                 }
                 if (statusError === 401 && x === 1){
-                    logout();   //Logouts after the request takes two Unauthorized request
+                    logout()   //Logouts after the request takes two Unauthorized request
                                 //This means it is unable to generate new accessToken
                                 //Refresh token expired
                 }
@@ -161,7 +161,7 @@ export default function ContentsPage({setIsLoading}){
                 }
             })
             
-            x--;
+            x--
         }while (x > 0)
 
         setIsLoading(false) // stops loading screen
@@ -170,14 +170,14 @@ export default function ContentsPage({setIsLoading}){
     
     // updates content data 
     async function updateContent(id, values){
-        setIsLoading(true); // triggers loading screen
+        setIsLoading(true) // triggers loading screen
 
-        let x = 2;
-        let statusError;
+        let x = 2
+        let statusError
 
         // Runs http request twice if token expired to generate new token
         do{
-            let token = statusError === 401 ? await refresh() : accessToken;
+            let token = statusError === 401 ? await refresh() : accessToken
             
             // updating data content from the api
             await api.put(`/content/${id}`, values, {
@@ -194,14 +194,14 @@ export default function ContentsPage({setIsLoading}){
             })
             .catch(err => {
                 let errMessage = err.response?.data.message
-                    statusError = err.response.status;
-                    console.error(errMessage);
+                    statusError = err.response.status
+                    console.error(errMessage)
                     
                     if (!statusError === 401){
-                        x--; // stops the loop if not Unauthorized
+                        x-- // stops the loop if not Unauthorized
                     }
                     if (statusError === 401 && x === 1){
-                        logout();   //Logouts after the request takes two Unauthorized request
+                        logout()   //Logouts after the request takes two Unauthorized request
                                     //This means it is unable to generate new accessToken
                                     //Refresh token expired or didn't exist
                     }
@@ -224,8 +224,8 @@ export default function ContentsPage({setIsLoading}){
         
         setIsLoading(true) // triggers loading screen
         
-        let x = 2;
-        let statusError;
+        let x = 2
+        let statusError
 
         // Runs http request twice if token expires to generate new token
         do{
@@ -239,29 +239,29 @@ export default function ContentsPage({setIsLoading}){
                 }
             })
             .then(result =>{
-                setContent(prev => prev.filter(content => content._id !== id));
+                setContent(prev => prev.filter(content => content._id !== id))
                 setStatuMessage("Deleted Successfully")
                 setIsError(false)
                 x-- //stops the loop if status 200
             })
             .catch(err=>{
                 let errMessage = err.response?.data.message
-                statusError = err.response.status;
-                console.error(errMessage);
+                statusError = err.response.status
+                console.error(errMessage)
                 if (!statusError === 401){
-                    x--; // stops the loop if not Unauthorized
+                    x-- // stops the loop if not Unauthorized
                 }
                 if (statusError === 401 && x === 1){
-                    logout();   //Logouts after the request takes two Unauthorized request
+                    logout()   //Logouts after the request takes two Unauthorized request
                                 //This means it is unable to generate new accessToken
                                 //Refresh token expired or didn't exist
                 }
                 else{
-                    setStatuMessage("There is an Internal Error. Try to refresh");
+                    setStatuMessage("There is an Internal Error. Try to refresh")
                 }
             setIsError(true)
-            });
-            x--;
+            })
+            x--
         } while(x > 0)
         
 
@@ -277,7 +277,7 @@ export default function ContentsPage({setIsLoading}){
             //fetching content data
             await api.get("/content")
             .then(result => {
-                setContent(result.data);
+                setContent(result.data)
             })
             .catch(err => {
                 console.error(err)
@@ -285,25 +285,25 @@ export default function ContentsPage({setIsLoading}){
             setIsLoading(false)
         }
 
-        fetchData();
+        fetchData()
 
     },[])
 
     //closes the snackbar alert
     const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
-        return;
+        return
         }
 
-        setOpen(false);
-    };
+        setOpen(false)
+    }
     
     function categoryOnChange(e){
         setCategory(e.target.value)
     }
     
     // All Cards Display filtered with Category
-    let toDisplayAllContent;
+    let toDisplayAllContent
     if(content){
         toDisplayAllContent = category === 'All' ? 
             content
@@ -328,7 +328,7 @@ export default function ContentsPage({setIsLoading}){
     }
 
     // Highlighted Cards Display
-    let toDisplayHighlightedContent;
+    let toDisplayHighlightedContent
     if(content){
         toDisplayHighlightedContent = content.filter(value => value.highlight)
                     .sort((a,b) => a.order - b.order)
@@ -345,7 +345,7 @@ export default function ContentsPage({setIsLoading}){
     if (otherCategory){
         otherCategory.forEach(element => {
             categories.push(element)
-        });
+        })
     }
 
     return(

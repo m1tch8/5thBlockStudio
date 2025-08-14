@@ -1,5 +1,5 @@
-import { useState } from "react";
-import LoadingScreen from '../Components/LoadingScreen';
+import { useState } from "react"
+import LoadingScreen from '../Components/LoadingScreen'
 
 function StatusModal({onClick}){
     
@@ -18,8 +18,8 @@ function StatusModal({onClick}){
 export default function SubmitModal({setIsLoading, submitStatus, setSubmitStatus}){
 
     function onClickClose(){
-        setIsLoading(false);
-        setSubmitStatus(false);
+        setIsLoading(false)
+        setSubmitStatus(false)
     }
 
     return(

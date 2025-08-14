@@ -15,7 +15,7 @@ function OutputsSection(){
     let categories = content ? [...new Set(content.map(item => item.category))].sort() : null
 
     // Displays content data separated by category
-    let toDisplay;
+    let toDisplay
     if (categories){
         toDisplay = categories.map((category, index) => {
             return(
@@ -37,10 +37,10 @@ function OutputsSection(){
         const fetchData = async ()=>{
             await axios.get('http://localhost:8888/api/content')
             .then(response => {
-                setContent(response.data);
+                setContent(response.data)
                 console.log(response.data)
             })
-            .catch(error => console.error(error));
+            .catch(error => console.error(error))
         }
         fetchData()
         setIsLoading(false)

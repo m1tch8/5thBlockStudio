@@ -1,5 +1,5 @@
-import axios from 'axios';
-import useAuth from './useAuth';
+import axios from 'axios'
+import useAuth from './useAuth'
 
 
 export default function useAPI(){
@@ -8,7 +8,7 @@ export default function useAPI(){
         baseURL: `http://localhost:8888/api`,
         withCredentials: true,
         
-    });
+    })
     
     return api
 }

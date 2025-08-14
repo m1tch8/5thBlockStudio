@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
-import LoadingScreen from "../Components/LoadingScreen";
-import useAuth from "../Hooks/useAuth";
-import useAPI from "../Hooks/useAPI";
+import { useState, useEffect } from "react"
+import LoadingScreen from "../Components/LoadingScreen"
+import useAuth from "../Hooks/useAuth"
+import useAPI from "../Hooks/useAPI"
 import StatusModal from '../Components/StatusModal'
 
 
 function YoutubeSection({contentFieldsRef, setIsLoading}){
-    const [fields, setFields] = useState(contentFieldsRef.current); // auto saves values in fields even when page changes
-    const [open, setOpen] = useState(false);                // set open for Snackbar Alert
-    const [statusMessage, setStatusMessage]= useState();    // set Snackbar Alert Message
-    const [isError, setIsError] = useState();               // Checks if there is error in submission
-    const {accessToken, logout, refresh} = useAuth();
-    const api = useAPI();
+    const [fields, setFields] = useState(contentFieldsRef.current) // auto saves values in fields even when page changes
+    const [open, setOpen] = useState(false)                // set open for Snackbar Alert
+    const [statusMessage, setStatusMessage]= useState()    // set Snackbar Alert Message
+    const [isError, setIsError] = useState()               // Checks if there is error in submission
+    const {accessToken, logout, refresh} = useAuth()
+    const api = useAPI()
 
     //clear fields after submission success
     function clear(){
@@ -22,20 +22,20 @@ function YoutubeSection({contentFieldsRef, setIsLoading}){
             videoId: '',
             siValue: ''
         }
-        setFields(contentFieldsRef.current);
+        setFields(contentFieldsRef.current)
     }
 
     //content submission function
     async function submitNewContent(){
 
-        setIsLoading(true); //Sets Loading screen
+        setIsLoading(true) //Sets Loading screen
 
         
-        let statusError;
-        let x = 2; //loop runs for 2 times if token expires
+        let statusError
+        let x = 2 //loop runs for 2 times if token expires
 
         do{
-            let token = statusError === 401 ? await refresh() : accessToken;
+            let token = statusError === 401 ? await refresh() : accessToken
             //Creates content data from API
             await api.post("/content", fields, {
                 headers: {
@@ -45,21 +45,21 @@ function YoutubeSection({contentFieldsRef, setIsLoading}){
             })
             .then(response =>{
                 console.log(response.data)
-                clear();
+                clear()
                 setStatusMessage("Content has been added successfully.")
                 setIsError(false)
-                x--; // This stops the loop as the request succeed
+                x-- // This stops the loop as the request succeed
             })
             .catch(err=> {
                 let errMessage = err.response?.data.message
-                statusError = err.response.status;
-                console.error(errMessage);
+                statusError = err.response.status
+                console.error(errMessage)
 
                 if (!statusError === 401){
-                    x--; // stops the loop if there's no error
+                    x-- // stops the loop if there's no error
                 }
                 if (statusError === 401 && x === 1){
-                    logout();   //Logouts after the request takes two Unauthorized request
+                    logout()   //Logouts after the request takes two Unauthorized request
                                 //This means it is unable to generate new accessToken
                                 //Refresh token expired or didn't exist
                 }
@@ -67,7 +67,7 @@ function YoutubeSection({contentFieldsRef, setIsLoading}){
                     //sets status message to be displayed in the Snackbar Alert
                     if (errMessage.includes("validation failed")){
                         if(!fields.siValue && !fields.videoId && fields.category && fields.title && fields.embedLink){
-                            setStatusMessage("Invalid Embeded Link");
+                            setStatusMessage("Invalid Embeded Link")
                         }
                         else{
                             setStatusMessage("All fields are required.")
@@ -84,37 +84,37 @@ function YoutubeSection({contentFieldsRef, setIsLoading}){
                 setIsError(true)
             })
 
-          x--;  
+          x--  
         }while (x > 0)
         
         
-        setIsLoading(false); //Stops the loading screen
-        setOpen(true); //Opens Snackbar Alert for submission status
+        setIsLoading(false) //Stops the loading screen
+        setOpen(true) //Opens Snackbar Alert for submission status
     }
 
     //Triggers Submission
     function submitHandle(e){
-        e.preventDefault();
-        submitNewContent();
+        e.preventDefault()
+        submitNewContent()
     }
 
     //Embed field On-change
     function embedOnChange(e){
 
-        contentFieldsRef.current.embedLink = e.target.value;
-        let ytEmbed = e.target.value;
-        let srcMatch = ytEmbed.match(/src="([^"]+)"/);
+        contentFieldsRef.current.embedLink = e.target.value
+        let ytEmbed = e.target.value
+        let srcMatch = ytEmbed.match(/src="([^"]+)"/)
         if (srcMatch && srcMatch[1]) {
-            const srcUrl = srcMatch[1];
+            const srcUrl = srcMatch[1]
 
             // Extract video ID from the path
-            const videoIdMatch = srcUrl.match(/embed\/([a-zA-Z0-9_-]+)/);
-            const vidId = videoIdMatch ? videoIdMatch[1] : null;
-            contentFieldsRef.current.videoId = vidId;
+            const videoIdMatch = srcUrl.match(/embed\/([a-zA-Z0-9_-]+)/)
+            const vidId = videoIdMatch ? videoIdMatch[1] : null
+            contentFieldsRef.current.videoId = vidId
             // Extract `si` query param using URL API
-            const url = new URL(srcUrl);
-            const siVal = url.searchParams.get('si');
-            contentFieldsRef.current.siValue = siVal;
+            const url = new URL(srcUrl)
+            const siVal = url.searchParams.get('si')
+            contentFieldsRef.current.siValue = siVal
 
             setFields({... fields, videoId: vidId, siValue: siVal, embedLink: e.target.value})
         }
@@ -128,23 +128,23 @@ function YoutubeSection({contentFieldsRef, setIsLoading}){
     //Title Field On Change
     function titleOnChange(e){
         setFields({...fields, title: e.target.value})
-        contentFieldsRef.current.title = e.target.value;
+        contentFieldsRef.current.title = e.target.value
     }
 
     //Category field On change
     function categoryOnChange(e){
         setFields({...fields, category: e.target.value})
-        contentFieldsRef.current.category = e.target.value;
+        contentFieldsRef.current.category = e.target.value
     }
 
     // handleClose for SnackBar Alert
     const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
-        return;
+        return
         }
 
-        setOpen(false);
-    };
+        setOpen(false)
+    }
 
     return(
         <>
@@ -163,7 +163,7 @@ function YoutubeSection({contentFieldsRef, setIsLoading}){
                 src={`https://www.youtube.com/embed/${fields.videoId}?si=${fields.siValue}`}
                 title="YouTube video player" 
                 frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allow="accelerometer autoplay clipboard-write encrypted-media gyroscope picture-in-picture web-share" 
                 referrerpolicy="strict-origin-when-cross-origin" 
                 allowfullscreen></iframe>
             </div>
@@ -179,61 +179,61 @@ function VideoFileSection({setIsLoading}){
     const [videoFile, setVideoFile] = useState(null)
     const [title, setTitle] = useState()
     const [category, setCategory] = useState()
-    const [open, setOpen] = useState(false);                // set open for Snackbar Alert
-    const [statusMessage, setStatusMessage]= useState();    // set Snackbar Alert Message
-    const [isError, setIsError] = useState(); 
+    const [open, setOpen] = useState(false)                // set open for Snackbar Alert
+    const [statusMessage, setStatusMessage]= useState()    // set Snackbar Alert Message
+    const [isError, setIsError] = useState() 
     const api = useAPI()
     function onDragOverHandle(e){
-        e.preventDefault();
+        e.preventDefault()
         setDrag(true)
     }
     function onDragLeaveHandle(e){
-        e.preventDefault();
+        e.preventDefault()
         setDrag(false)
         
     }
     function onDropHandle(e){
-        e.preventDefault();
-        setDrag(false);
+        e.preventDefault()
+        setDrag(false)
 
-        const file = e.dataTransfer.files[0];
-        if (!file) return;
+        const file = e.dataTransfer.files[0]
+        if (!file) return
 
         if (!file.type.startsWith('video/')) {
-        setVideoFile(null);
-        return;
+        setVideoFile(null)
+        return
         }
 
-        const previewURL = URL.createObjectURL(file);
+        const previewURL = URL.createObjectURL(file)
         setVideoFile({
         file,
         preview: previewURL,
-        });
+        })
         
     }
 
     function fileOnChange(e){
         const file = e.target.files[0]
 
-        if (!file) return;
+        if (!file) return
 
         if (!file.type.startsWith('video/')) {
-            setVideoFile(null);
-            return;
+            setVideoFile(null)
+            return
         }
         console.log(file)
-        const previewURL = URL.createObjectURL(file);
+        const previewURL = URL.createObjectURL(file)
         setVideoFile({
             file: file,
             preview: previewURL,
-        });
+        })
 
     }
     async function formSubmitHandle(e){
         setIsLoading(true)
         setOpen(false)
         e.preventDefault()
-        const formData = new FormData();
+        const formData = new FormData()
         formData.append('video', videoFile?.file)
         formData.append('title', title)
         formData.append('category', category)
@@ -273,19 +273,19 @@ function VideoFileSection({setIsLoading}){
     useEffect(() => {
         return () => {
             if (videoFile?.preview) {
-                URL.revokeObjectURL(videoFile.preview);
+                URL.revokeObjectURL(videoFile.preview)
             }
-        };
-    }, [videoFile]);
+        }
+    }, [videoFile])
 
     // handleClose for SnackBar Alert
     const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
-        return;
+        return
         }
 
-        setOpen(false);
-    };
+        setOpen(false)
+    }
 
     return(
         <>

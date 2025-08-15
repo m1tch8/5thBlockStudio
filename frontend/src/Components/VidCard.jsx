@@ -3,7 +3,8 @@ import '../styles/vidcard.css'
 import VideoModal from "./VideoModal"
 
 export default function VidCard({values, autoplay, style}){
-    const {title, siValue, videoId, type} = values
+    const {title, siValue, videoId, type} = values ? values : null
+    
     const [toggleModal, setToggleModal] = useState()
     function modalClick(){
         setToggleModal(!toggleModal)

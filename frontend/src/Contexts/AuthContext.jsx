@@ -26,6 +26,7 @@ export function AuthProvider(props){
             password
         }).then(response =>{
             const role = response.data.role;
+            console.log(response)
             if (role !=="admin"){
                 throw new Error("User is not Authorized");
             }
@@ -67,7 +68,7 @@ export function AuthProvider(props){
             setAccessToken(null)
         }
         catch(err){
-            console.error("from Context: ", err.message)
+            console.error(err.message)
             return false;
         }
         finally{

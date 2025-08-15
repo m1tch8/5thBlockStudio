@@ -67,42 +67,48 @@ export const loginUser = asyncHandler(async (req,res) =>{
     }
     //Matching passwords
     if(user && await (bcrypt.compare(password, user.password))){
-        //Generate Access Token
-        const accessToken = jwt.sign({
-            user:{
-                username: user.username,
-                email: user.email,
-                id: user.id,
+
+        try{
+            //Generate Access Token
+            const accessToken = jwt.sign({
+                user:{
+                    username: user.username,
+                    email: user.email,
+                    id: user.id,
+                    role: user.role
+                }
+            },process.env.ACCESS_TOKEN_SECRET,{expiresIn:'15m'});
+
+            //Generate Refresh Token
+            const refreshToken = jwt.sign({
+                user:{
+                    username: user.username,
+                    email: user.email,
+                    id: user.id,
+                    role: user.role
+                }
+            },process.env.REFRESH_TOKEN_SECRET,{expiresIn:'1d'});
+
+            /* RefreshTokens.create({
+                token: refreshToken
+            }); */
+
+            //Adds Refresh Token to Cookie
+            res.cookie('jwt', refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production" ,
+                sameSite: 'Lax',
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            })
+
+            res.status(200).json({
+                accessToken,
                 role: user.role
-            }
-        },process.env.ACCESS_TOKEN_SECRET,{expiresIn:'15m'});
-
-        //Generate Refresh Token
-        const refreshToken = jwt.sign({
-            user:{
-                username: user.username,
-                email: user.email,
-                id: user.id,
-                role: user.role
-            }
-        },process.env.REFRESH_TOKEN_SECRET,{expiresIn:'1d'});
-
-        /* RefreshTokens.create({
-            token: refreshToken
-        }); */
-
-        //Adds Refresh Token to Cookie
-        res.cookie('jwt', refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === production ,
-            sameSite: 'Lax',
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        })
-
-        res.status(200).json({
-            accessToken,
-            role: user.role
-        });
+            });
+        }
+        catch(err){
+            throw new Error(err.message)
+        }
     }
     else{
         res.status(404);

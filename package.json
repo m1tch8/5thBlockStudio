@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=development node backend/index.js",
+    "dev": "NODE_ENV=development node backend/index.js",
     "build": "npm install --production=false --prefix frontend && npm run build --prefix frontend",
-    "start": "cross-env NODE_ENV=production node backend/index.js"
+    "start": "NODE_ENV=production node backend/index.js"
   },
   "keywords": [],
   "author": "",

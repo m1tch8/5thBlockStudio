@@ -1,5 +1,5 @@
 import { useState } from "react"
-import '../styles/VidCard.css'
+import '../styles/vidcard.css'
 import VideoModal from "./VideoModal"
 
 export default function VidCard({values, autoplay, style}){

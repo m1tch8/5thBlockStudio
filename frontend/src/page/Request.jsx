@@ -396,7 +396,7 @@ export default function Request(){
                     </div>
 
                     <p style={{fontSize: "14px"}}>Prove you are a human:</p>
-                    <ReCAPTCHA className="g-recaptcha" sitekey="6LfjEGgrAAAAALy6KACOqMA6-m0HL4l1g9xVzlFy" 
+                    <ReCAPTCHA className="g-recaptcha" sitekey="6LdSxKYrAAAAAFjLbQUtvK5GQ1UXJ1P0OCWJ7PCZ" 
                         onChange={recaptchaOnChange}/>
                     
                     <div className="submit-btn-container">

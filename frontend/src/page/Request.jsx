@@ -4,7 +4,7 @@ import '../styles/request.css'
 import { useRef, useState, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
 import ReCAPTCHA from 'react-google-recaptcha'
-import SubmitModal from '../Components/SubmitModal'
+import LoadingScreen from '../Components/LoadingScreen'
 
 function InputField(props){
     const {label, errorMsg, placeholder, focused, ...inputProps} = props
@@ -69,7 +69,7 @@ function Checkbox(props){
 export default function Request(){
     const [isLoading, setIsLoading] = useState(false)
     const [submitStatus, setSubmitStatus] = useState(false)
-    const [capVal, setCapVal] = useState(null)
+    const [capchtaValue, setCapchtaValue] = useState(null)
     const [submitError, setSubmitError] = useState(
         {
             error: false,
@@ -188,6 +188,7 @@ export default function Request(){
             errorMsg: "Invalid input",
             focused: false,
             min: 0,
+            max: 59
             
         },
         {
@@ -268,8 +269,34 @@ export default function Request(){
             value: "Others"
         },
     ]
+
+    async function submitRequest(){
+        
+        await emailjs.sendForm("service_t50laqt", 'template_wi4fan5', form.current,{
+            publicKey: 'CiLIpAZrfvaLUjNb3',
+        })
+        .then(() => {
+            console.log('SUCCESS!')
+            setSubmitStatus(true)
+            setIsLoading(false)
+        },
+        (error) => {
+            console.log('FAILED...', error.text)
+            setSubmitError({error: true, errorMsg: 'There is something wrong. Unable to send request.'})
+            setIsLoading(false)
+        },
+        )
+    }
+
+    useEffect(()=>{ //Sending Form to Email
+        if(isLoading){
+            submitRequest()
+        }
+    },[isLoading])
+
     //Form Submission
     function onClickSubmit(e){ 
+        
         e.preventDefault()
         // checking if validationMessage contains value in each input fields
         let thereIsError = false
@@ -287,6 +314,7 @@ export default function Request(){
                 }))
             }
         }
+
         if(thereIsError){
             setSubmitError({error: true, errorMsg: 'please Fill up form correctly.'})
             scrollBackRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -294,37 +322,12 @@ export default function Request(){
             setSubmitError({error: false, errorMsg: ''})
             setIsLoading(true)
         }
+        
     }
     //Captcha On Change
     function recaptchaOnChange(result){
-        setCapVal(result)
+        setCapchtaValue(result)
     }
-
-    useEffect(()=>{ //Sending Form to Email
-        if(isLoading=== true){
-            emailjs
-            .sendForm("service_t50laqt", 'template_wi4fan5', form.current,{
-                publicKey: 'CiLIpAZrfvaLUjNb3',
-            })
-            .then(
-                () => {
-                console.log('SUCCESS!')
-                setSubmitStatus(true)
-                },
-                (error) => {
-                console.log('FAILED...', error.text)
-                setSubmitError({error: true, errorMsg: 'There is something wrong. Unable to send request.'})
-                setIsLoading(false)
-                },
-            )
-
-            const sampInterval = setInterval(() => {
-                setSubmitStatus(true)
-                clearInterval(sampInterval)
-            }, 3000)            
-        }
-
-    },[isLoading])
 
     const getTomorrowDate = () => {
         const today = new Date()
@@ -340,78 +343,87 @@ export default function Request(){
     return(
         <>
         <Header/>
-        <div className="section">
-            <h3 className="headings" ref={scrollBackRef}>REQUEST FORM</h3>
-            <div className="container">
-                <form action="" onSubmit={onClickSubmit} noValidate ref={form}>
-                    <div className="input-container">
-                        {
-                            inputs.map(
-                                (input, index)=> (index < 8 &&
-                                    <InputField key={input.id} {...input} 
-                                    ref={el =>errorRef.current[index]= el}/>
+        {!submitStatus &&
+            <div className="section">
+                <h3 className="headings" ref={scrollBackRef}>REQUEST FORM</h3>
+                <div className="container">
+                    <form action="" onSubmit={onClickSubmit} noValidate ref={form}>
+                        <div className="input-container">
+                            {
+                                inputs.map(
+                                    (input, index)=> (index < 8 &&
+                                        <InputField key={input.id} {...input} 
+                                        ref={el =>errorRef.current[index]= el}/>
+                                    )
                                 )
-                            )
-                        }
-                    </div>
-                    <div className='duration-text'>DURATION</div>
-                    <div className="input-container">
-                        {
-                            inputs.map(
-                                (input, index)=> (index > 7 && index < 11 &&
-                                    <InputField key={input.id} {...input} 
-                                    ref={el =>errorRef.current[index]= el}/>
+                            }
+                        </div>
+                        <div className='duration-text'>DURATION</div>
+                        <div className="input-container">
+                            {
+                                inputs.map(
+                                    (input, index)=> (index > 7 && index < 11 &&
+                                        <InputField key={input.id} {...input} 
+                                        ref={el =>errorRef.current[index]= el}/>
+                                    )
                                 )
-                            )
-                        }
-                    </div>
-                    <div className="mix-style-container" style={{marginTop: '10px'}}>
-                        <div style={{padding: '10px 0'}}>MIX STYLE</div>
-                        <div className="checkboxes">
-                            {mixStyle.map(value => <Checkbox {...value} key={value.id}/>)}
+                            }
                         </div>
-                    </div>
-                    <div className="purpose-container" style={{marginBottom: '25px'}}>
-                        <p style={{padding: '20px 0'}}>Choose if will be used in Competitions or Not:</p>
-                        <div className="checkboxes">
-                            <input type="radio" id="competition" name='purpose' value={"Competition"}/>
-                            <label htmlFor="competition">Competition</label>
-                            <input type="radio" id="non-competition" name='purpose' value={"Non-competition"}/>
-                            <label htmlFor="non-competition">Non-competition</label>
+                        <div className="mix-style-container" style={{marginTop: '10px'}}>
+                            <div style={{padding: '10px 0'}}>MIX STYLE</div>
+                            <div className="checkboxes">
+                                {mixStyle.map(value => <Checkbox {...value} key={value.id}/>)}
+                            </div>
                         </div>
-                    </div>
-                    
-                    <InputField {...inputs[11]} min={minDate} />
-                    
-                    <div style={{padding: '20px 0'}}>MESSAGE</div>
-                    <div className="textarea-container">
-                        <textarea name="message" id="" placeholder='You can list here your ideas, specifications for the mix, and other information needed.'></textarea>
-                    </div>
+                        <div className="purpose-container" style={{marginBottom: '25px'}}>
+                            <p style={{padding: '20px 0'}}>Choose if will be used in Competitions or Not:</p>
+                            <div className="checkboxes">
+                                <input type="radio" id="competition" name='purpose' value={"Competition"}/>
+                                <label htmlFor="competition">Competition</label>
+                                <input type="radio" id="non-competition" name='purpose' value={"Non-competition"}/>
+                                <label htmlFor="non-competition">Non-competition</label>
+                            </div>
+                        </div>
+                        
+                        <InputField {...inputs[11]} min={minDate} />
+                        
+                        <div style={{padding: '20px 0'}}>MESSAGE</div>
+                        <div className="textarea-container">
+                            <textarea name="message" id="" placeholder='You can list here your ideas, specifications for the mix, and other information needed.'></textarea>
+                        </div>
 
-                    <div className="found-container" style={{marginBottom: '20px'}}>
-                        <div style={{padding: '10px 0'}}>How did you hear about 5th Block Studios?</div>
-                        <div className="checkboxes">
-                            {found.map(value => <Checkbox {...value} key={value.id}/>)}
+                        <div className="found-container" style={{marginBottom: '20px'}}>
+                            <div style={{padding: '10px 0'}}>How did you hear about 5th Block Studios?</div>
+                            <div className="checkboxes">
+                                {found.map(value => <Checkbox {...value} key={value.id}/>)}
+                            </div>
                         </div>
-                    </div>
 
-                    <p style={{fontSize: "14px"}}>Prove you are a human:</p>
-                    <ReCAPTCHA className="g-recaptcha" sitekey="6LdSxKYrAAAAAFjLbQUtvK5GQ1UXJ1P0OCWJ7PCZ" 
-                        onChange={recaptchaOnChange}/>
-                    
-                    <div className="submit-btn-container">
-                        <input className="white-btn big-btn submit-custom" type="submit" value={"Send Request"} disabled={!capVal || isLoading}/>
-                        <p style={{color: 'red'}}>{submitError.error && submitError.errorMsg}</p>
-                        {isLoading && <SubmitModal setIsLoading={setIsLoading} 
-                                                    submitStatus={submitStatus} setSubmitStatus={setSubmitStatus}/>
-                        }
-                    </div>
-                    
-                </form>
+                        <p style={{fontSize: "14px"}}>Prove you are a human:</p>
+                        <ReCAPTCHA className="g-recaptcha" sitekey="6LdSxKYrAAAAAFjLbQUtvK5GQ1UXJ1P0OCWJ7PCZ"  // 6LfjEGgrAAAAALy6KACOqMA6-m0HL4l1g9xVzlFy
+                            onChange={recaptchaOnChange}/>
+                        
+                        <div className="submit-btn-container">
+                            <input className="white-btn big-btn submit-custom" type="submit" value={"Send Request"} disabled={!capchtaValue || isLoading}/>
+                            <p style={{color: 'red'}}>{submitError.error && submitError.errorMsg}</p>
+                            
+                        </div>
+                        
+                    </form>
+                </div>
             </div>
-        </div>
-        
-        
+        }
+        {isLoading && <LoadingScreen/>}
+        {submitStatus && 
+            <div className="done section" style={{alignText: 'center'}}>
+                <div>
+                    <p className="headings">Your request has been submitted</p>
+                    <p>We sent a message to your email.</p>
+                    <a href="/home">Go back to home page</a>
+                </div>
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+        }
         <Footer/>
         
         </>

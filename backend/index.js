@@ -7,12 +7,14 @@ import contentRoute from "./routes/contentRoutes.js"
 import cors from "cors"
 import cookieParser from "cookie-parser";
 import path from 'path'
-import fs from 'fs'
 import { fileURLToPath } from 'url';
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const __dirname2 = path.resolve()
+
 
 dotenv.config();
 connectDb();
@@ -31,6 +33,16 @@ app.use("/api/user", userRoute);
 app.use("/api/content", contentRoute)
 app.use(errorHandler);
 
+console.log('dirname2', __dirname2)
+console.log('dirname', __dirname)
+
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(__dirname2, "frontend/dist")))
+
+    app.all("/{*any}", (req,res)=>{
+        res.sendFile(path.resolve(__dirname2, "frontend", "dist", "index.html"))
+    })
+}
 
 app.listen(PORT, () =>{
     console.log(`Server running on Port ${PORT}`);

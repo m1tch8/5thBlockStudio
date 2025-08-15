@@ -15,11 +15,11 @@ function HeroSection(){
     return(
         <>
             <div className="hero-container">
-                <img src="../src/assets/generals-hero-image.png" alt="" className="hero-banner-image"/>
+                <img src="/assets/generals-hero-image.png" alt="" className="hero-banner-image"/>
                 <div className="gradient">
                     <div className="hero-items-container">
                         <div className="logo-container">
-                            <img src="../../src/assets/5th_Block_Logo.png" alt="5thblock" className="hero-logo"/>
+                            <img src="/assets/5th_Block_Logo.png" alt="5thblock" className="hero-logo"/>
                         </div>
                         <div className="hero-item-details">
                             <div className="hero-text-container">
@@ -143,7 +143,7 @@ function BannerSection(){
     return(
         <div className="banner-section section" style={{marginTop:'20px'}}>
             <div className="banner-container">
-                <img src="../../src/assets/vibe.png" alt="" />
+                <img src="/assets/vibe.png" alt="" />
                 <div className="banner-details">
                     <div className="details-wrapper">
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, molestias.</p>
@@ -154,7 +154,7 @@ function BannerSection(){
                 <div className="banner-shadow"></div>
             </div>
             <div className="banner-container">
-                <img src="../../src/assets/cheer.jpg" alt="" />
+                <img src="/assets/cheer.jpg" alt="" />
                 <div className="banner-details">
                     <div className="details-wrapper">
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, molestias.</p>
@@ -167,7 +167,7 @@ function BannerSection(){
                 <div className="banner-shadow"></div>
             </div>
             <div className="banner-container">
-                <img src="../../src/assets/concert.jpg" alt="" style={{objectPosition: '50% 70%'}}/>
+                <img src="/assets/concert.jpg" alt="" style={{objectPosition: '50% 70%'}}/>
                 <div className="banner-details">
                     <div className="details-wrapper">
                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, molestias.</p>
@@ -190,7 +190,7 @@ export default function Home(){
             <a href="/outputs" className="show-more-link"> 
                 <div className="show-more">
                     <video loop muted autoPlay >
-                        <source src="../../src/assets/[Front Row] NDDU Generals  Philippines  Body Rock Asia 2025.mp4"/>
+                        <source src="/assets/[Front Row] NDDU Generals  Philippines  Body Rock Asia 2025.mp4"/>
                     </video>
                     <div className="dark-background"></div>
                     <div>

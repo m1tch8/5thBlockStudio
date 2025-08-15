@@ -14,7 +14,7 @@ export default function Logo({style}){
     return(
         <div className="logo" style={style && style} >
             <a href="/home" style={styles}>
-                <img src="../../src/assets/5th_Block_Logo.png" alt="5th Block Studios Logo" style={styles2}/>
+                <img src="/assets/5th_Block_Logo.png" alt="5th Block Studios Logo" style={styles2}/>
                 <p>5TH BLOCK STUDIOS</p>
             </a>
         </div>

@@ -9,6 +9,7 @@ import VidCard from "../Components/VidCard.jsx"
 import { useNavigate } from "react-router-dom"
 import VideoModal from "../Components/VideoModal.jsx"
 import LoadingScreen from "../Components/LoadingScreen.jsx"
+import useAPI from "../Hooks/useAPI.jsx"
 
 function HeroSection(){
 
@@ -73,7 +74,7 @@ function FeaturedCard({values}){
 }
 
 function FeaturedSection(){
-
+    const api = useAPI()
     const [videoValues, setVideoValues] = useState()
     const [isLoading, setIsLoading] = useState()
 
@@ -81,7 +82,7 @@ function FeaturedSection(){
     useEffect(()=>{
         setIsLoading(true)
         const fetchData = async ()=>{
-            await axios.get('http://localhost:8888/api/content?highlight=true')
+            await api.get('/content?highlight=true')
             .then(response => {
                 setVideoValues(response.data)
                 console.log(response.data)

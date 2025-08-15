@@ -6,11 +6,13 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import VidCard from "../Components/VidCard"
 import LoadingScreen from "../Components/LoadingScreen"
+import useAPI from "../Hooks/useAPI"
 
 function OutputsSection(){
     
     const [isLoading, setIsLoading] = useState()
     const [content, setContent]= useState([])
+    const api = useAPI()
     
     let categories = content ? [...new Set(content.map(item => item.category))].sort() : null
 
@@ -35,7 +37,7 @@ function OutputsSection(){
     useEffect(()=>{
         setIsLoading(true)
         const fetchData = async ()=>{
-            await axios.get('http://localhost:8888/api/content')
+            await api.get('/content')
             .then(response => {
                 setContent(response.data)
                 console.log(response.data)

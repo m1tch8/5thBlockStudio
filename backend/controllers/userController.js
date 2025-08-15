@@ -94,7 +94,7 @@ export const loginUser = asyncHandler(async (req,res) =>{
         //Adds Refresh Token to Cookie
         res.cookie('jwt', refreshToken, {
             httpOnly: true,
-            secure: false,
+            secure: process.env.NODE_ENV === production ,
             sameSite: 'Lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
@@ -156,8 +156,9 @@ export const logoutUser = asyncHandler(async (req, res) => {
     res.clearCookie('jwt', {
         httpOnly: true,
         sameSite: 'Lax',
-        secure: false
+        secure: process.env.NODE_ENV === production
     });
+    
     
     res.json({message: "Successfuly logged out"});
     
@@ -212,7 +213,7 @@ export const updateUser = asyncHandler(async (req, res) => {
     //Adds Refresh Token to Cookie
     res.cookie('jwt', refreshToken, {
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === production ,
         sameSite: 'Lax',
         maxAge: 7 * 24 * 60 * 60 * 1000
     })

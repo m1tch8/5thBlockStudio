@@ -8,7 +8,7 @@ export default function Footer(){
         <>
         <div className="footer">
             <div className="footer-img-container">
-                <img className="footer-img" src="../../src/assets/generals-hero-image.png" alt="" />
+                <img className="footer-img" src="/assets/generals-hero-image.png" alt="" />
             </div>
             <div className="shadow">
                 

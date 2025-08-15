@@ -199,3 +199,32 @@ textarea:focus{
     z-index:4;
     color: black;;
 }
+
+.done{
+    display: flex;
+    gap: 45px;
+    align-items: center;
+    padding-bottom: 400px;
+}
+.done i{
+    font-size: 100px;
+    color: #696969
+}
+.done p:nth-of-type(1), .done a{
+    color: #696969;
+}
+.done a{
+    font-size: 16px;
+}
+.done p:nth-of-type(2){
+    color: #696969;
+    font-size: 18px;
+}
+
+@media (max-width: 365px){
+    .done{
+        display: block;
+        gap: 45px;
+        align-items: center;
+    }
+}

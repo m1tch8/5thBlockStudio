@@ -190,7 +190,7 @@ export default function Home(){
             <FeaturedSection/>
             <a href="/outputs" className="show-more-link"> 
                 <div className="show-more">
-                    <video loop muted autoPlay >
+                    <video loop muted autoPlay playsinline>
                         <source src="/assets/[Front Row] NDDU Generals  Philippines  Body Rock Asia 2025.mp4"/>
                     </video>
                     <div className="dark-background"></div>

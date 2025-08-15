@@ -31,7 +31,7 @@ export default function VideoCard({title, style, videoId, siValue, type}){
                         allowfullscreen>
                     </iframe>}
                 {type === "file" &&
-                    <video src={videoId} autoPlay loop muted></video>
+                    <video src={videoId} autoPlay loop muted playsinline></video>
                 }
                 
             </div>

@@ -29,9 +29,9 @@ export default function VidCard({values, autoplay, style}){
                 }
                 {type === "file" &&
                 (autoplay ? 
-                    <video src={videoId} autoPlay loop muted></video>
+                    <video src={videoId} autoPlay loop muted playsinline></video>
                     :
-                    <video src={videoId}></video>
+                    <video src={videoId} playsinline></video>
                 )
                     
                 }

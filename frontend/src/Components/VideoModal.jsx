@@ -83,7 +83,7 @@ export default function VideoModal({modalClick, videoId, siValue, type}){
                     allowfullscreen>
                 </iframe>}
                 {type ==="file" &&
-                    <video style={iframeStyle} src={videoId} controls></video>
+                    <video style={iframeStyle} src={videoId} controls playsinline></video>
                 }
             </div>
             <label className="video-modal-close" htmlFor="close" onClick={modalClick} style={videoModalCloseStyle}>

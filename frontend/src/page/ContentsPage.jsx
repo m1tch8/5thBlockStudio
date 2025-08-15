@@ -45,7 +45,7 @@ function Card({values, setHighlight, updateContent, deleteContent}){
                     allowfullscreen></iframe>
                 }
                 {type === "file" &&
-                    <video src={videoId} controls></video>
+                    <video src={videoId} controls playsinline></video>
                 }
                 
             </div>

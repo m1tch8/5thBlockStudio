@@ -44,7 +44,6 @@ function YoutubeSection({contentFieldsRef, setIsLoading}){
                 }
             })
             .then(response =>{
-                console.log(response.data)
                 clear()
                 setStatusMessage("Content has been added successfully.")
                 setIsError(false)
@@ -223,7 +222,6 @@ function VideoFileSection({setIsLoading}){
             setVideoFile(null)
             return
         }
-        console.log(file)
         const previewURL = URL.createObjectURL(file)
         setVideoFile({
             file: file,
@@ -251,7 +249,6 @@ function VideoFileSection({setIsLoading}){
                 'Content-Type': 'multipart/form-data',
             }})
             .then(response =>{
-                console.log(response)
                 setIsError(false)
                 setStatusMessage("Content has been added successfully.")
                 x--

@@ -126,7 +126,6 @@ export default function ContentsPage({setIsLoading}){
         // Runs http request twice if token expired to generate new token
         do {
             let token = statusError === 401 ? await refresh() : accessToken
-            console.log(token)
             // updating data from the API (highlight attribute to be specific)
             await api.put(`/content/${id}?highlight=true`, {}, {
                 headers: {
@@ -139,7 +138,6 @@ export default function ContentsPage({setIsLoading}){
                 setIsError(false)
                 setStatuMessage(result.data.highlight ? "Added to Highlights" : "Removed to Highlights")
                 x-- // stops the loop if request status is 200
-                console.log(result)
             })
             .catch(err => {
                 let errMessage = err.response?.data.message

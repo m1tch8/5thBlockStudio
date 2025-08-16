@@ -13,7 +13,6 @@ const getUser = asyncHandler(async (req,res) =>{
 //GET
 //Gets current logged User 
 export const currentUser = asyncHandler(async (req,res)=>{
-    
     res.status(200).json(req.user);
 })
 
@@ -21,19 +20,25 @@ export const currentUser = asyncHandler(async (req,res)=>{
 //Register User
 export const registerUser = asyncHandler(async (req,res) =>{
     const {username, email, password, role} = req.body;
-    console.log(role)
     if(!username ||!email||!password){
         res.status(400)
         throw new Error("All fields are required");
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({
-        username,
-        email,
-        password: hashedPassword,
-        role
-    });
-    res.status(200).json(newUser);
+    
+    try{
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await User.create({
+            username,
+            email,
+            password: hashedPassword,
+            role
+        });
+        res.status(200).json(newUser);
+    }
+    catch(err){
+        res.status(500)
+        throw new Error(err.message);
+    }
 })
 
 //POST 
@@ -59,7 +64,7 @@ export const loginUser = asyncHandler(async (req,res) =>{
     
     if(!user){
         res.status(404);
-        throw new Error("User not found")
+        throw new Error("Invalid username or password")
     }
     //Matching passwords
     if(user && await (bcrypt.compare(password, user.password))){
@@ -90,7 +95,7 @@ export const loginUser = asyncHandler(async (req,res) =>{
             }); */
 
             //Adds Refresh Token to Cookie
-            res.cookie('jwt', refreshToken, {
+            res.cookie('fifthBlockStudioRefreshToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production" ,
                 sameSite: 'Lax',
@@ -103,12 +108,13 @@ export const loginUser = asyncHandler(async (req,res) =>{
             });
         }
         catch(err){
+            res.status(500)
             throw new Error(err.message)
         }
     }
     else{
         res.status(404);
-        throw new Error("Password do not Match");
+        throw new Error("Invalid username or password");
     }
     
 })
@@ -118,12 +124,12 @@ export const loginUser = asyncHandler(async (req,res) =>{
 export const refresh = asyncHandler(async(req, res) =>{
     const cookies = req.cookies;
 
-    if (!cookies?.jwt) {
+    if (!cookies?.fifthBlockStudioRefreshToken) {
         res.status(401);
         throw new Error("Unauthorized");
     }
 
-    const refreshToken = cookies.jwt;
+    const refreshToken = cookies.fifthBlockStudioRefreshToken;
     let newAccessToken;
     let role;
     try{
@@ -134,7 +140,7 @@ export const refresh = asyncHandler(async(req, res) =>{
         role = decoded.user.role;
     }
     catch (err){
-        res.status(400)
+        res.status(500)
         throw new Error(err.message);
     }
 
@@ -148,14 +154,11 @@ export const refresh = asyncHandler(async(req, res) =>{
 //Logout User
 export const logoutUser = asyncHandler(async (req, res) => {
     const cookies = req.cookies;
-    if (!cookies.jwt){
+    if (!cookies.fifthBlockStudioRefreshToken){
         return res.status(204).json({message: "No Content"})
     }
 
-    const refreshToken = cookies.jwt;
-
-
-    res.clearCookie('jwt', {
+    res.clearCookie('fifthBlockStudioRefreshToken', {
         httpOnly: true,
         sameSite: 'Lax',
         secure: process.env.NODE_ENV === production
@@ -213,14 +216,13 @@ export const updateUser = asyncHandler(async (req, res) => {
     },process.env.REFRESH_TOKEN_SECRET,{expiresIn:'1d'});
 
     //Adds Refresh Token to Cookie
-    res.cookie('jwt', refreshToken, {
+    res.cookie('fifthBlockStudioRefreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === production ,
         sameSite: 'Lax',
         maxAge: 7 * 24 * 60 * 60 * 1000
     })
     
-    console.log(user)
     res.status(200).json({
         id: user.id,
         username: user.username,

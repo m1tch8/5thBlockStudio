@@ -40,7 +40,6 @@ function OutputsSection(){
             await api.get('/content')
             .then(response => {
                 setContent(response.data)
-                console.log(response.data)
             })
             .catch(error => console.error(error))
         }

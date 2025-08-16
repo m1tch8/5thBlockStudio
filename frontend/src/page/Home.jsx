@@ -84,7 +84,6 @@ function FeaturedSection(){
             await api.get('/content?highlight=true')
             .then(response => {
                 setVideoValues(response.data)
-                console.log(response.data)
             })
             .catch(error => console.error(error))
         }

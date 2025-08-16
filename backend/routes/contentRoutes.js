@@ -2,7 +2,6 @@ import express from "express";
 import {contentPermission} from "../middleware/userAuth.js"
 import getVideoCard, { 
     createVideoCard,
-    createVideoCardFile,
     deleteVideoCard,
     IndividualVideoCard,
     limitVideoCard,

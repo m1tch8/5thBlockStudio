@@ -3,6 +3,12 @@ import VideoCard from "../models/videoCardModel.js"
 import { v2 as cloudinary } from 'cloudinary';
 import streamifier from 'streamifier'
 
+cloudinary.config({ 
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+    api_key: process.env.CLOUDINARY_API_KEY, 
+    api_secret: process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
+});
+
 //GET
 //Getting data of VideoCard
 export const getVideoCard = asyncHandler(async (req,res)=>{
@@ -64,38 +70,32 @@ export const limitVideoCard = asyncHandler(async(req, res) => {
 export const createVideoCard = asyncHandler(async (req,res)=>{
     const data = req.body
     data.type = "youtube"
-    let vCard
+    
     try{
-        vCard = await VideoCard.create(data)
+        const vCard = await VideoCard.create(data)
+        res.status(200).json({
+        success: true,
+        vCard
+    })
     }
     catch(err){
         res.status(400)
         throw new Error(err.message)
     }
     
-
-    res.status(200).json({
-        success: true,
-        vCard
-    })
 });
 
     
 export const uploadVideo = asyncHandler(async (req,res)=>{
     const file = req.file
     const {title, category} = req.body;
+    if (!title || !category){
+        res.status(400)
+        throw new Error("All fields are required")
+    }
     if (!file){
         throw new Error("No video uploaded or wrong file type.")
     }
-
-    let url
-    
-    cloudinary.config({ 
-        cloud_name: 'dhxdwsngf', 
-        api_key: '646751556789485', 
-        api_secret: 'GDWsKhT707MX6G9j2CIN7KV4gxc' // Click 'View API Keys' above to copy your API secret
-    });
-
     try {
         
         const stream = cloudinary.uploader.upload_stream({
@@ -113,13 +113,12 @@ export const uploadVideo = asyncHandler(async (req,res)=>{
                     { quality: 'auto:eco', fetch_format: 'auto', width: 720 }
                 ]
             });
-            console.log({ optimizedUrl });
 
             const videoCard = await VideoCard.create({
                 title,
                 category,
                 videoId: optimizedUrl,
-                siValue: optimizedUrl,
+                siValue: result.public_id,
                 type: "file"
             })
             res.status(200).json({
@@ -135,49 +134,6 @@ export const uploadVideo = asyncHandler(async (req,res)=>{
         res.status(500).send('Unexpected server error.');
     }
 });
-
-export const createVideoCardFile = asyncHandler(async (req,res)=>{
-
-    const {title, category} = req.body;
-    if (!req.file) {
-        res.status(400)
-        throw new Error('No video uploaded or wrong file type.')
-    //return res.status(400).json({ message: 'No video uploaded or wrong file type.' });
-    }
-
-    const videoUrl = `${req.protocol}://${req.get('host')}/videos/${req.file.filename}`;
-
-    let videoCard;
-    try{
-        videoCard = await VideoCard.create({
-            title,
-            category,
-            videoId: videoUrl,
-            siValue: req.file.filename,
-            type: "file"
-        })
-    }
-    catch(err){
-        throw new Error(err.message)
-    }
-    
-    res.status(200).json({
-        success: true,
-        videoCard
-    });
-
-    /* res.status(200).json({
-        message: 'Video uploaded successfully!',
-        url: videoUrl,
-        file: {
-        filename: req.file.filename,
-        path: req.file.path,
-        mimetype: req.file.mimetype,
-        size: req.file.size,
-        },
-    }); */
-})
-
 
 
 //PUT
@@ -215,12 +171,10 @@ export const updateVideoCard = asyncHandler(async (req,res)=>{
         res.status(200).json(videoCard)
         return
     }
-
     if(!id){
         res.status(404)
         throw new Error("Id parameter is required")
     }
-
     try{
         await VideoCard.findByIdAndUpdate(
         id,
@@ -251,9 +205,21 @@ export const deleteVideoCard = asyncHandler(async (req,res)=>{
     const type = vidCard.type;
     
     if(type === "file"){
-        
-    }
+        await cloudinary.uploader.destroy('ra4ysi8bik471mlfodad', {
+            resource_type: 'video',
+            invalidate: true
+        }, function(error, result) {
 
+            if (result.result === 'not found' || result === 'not found') {
+                res.status(404)
+                throw new Error("Not found")
+            }
+            if (error){
+                res.status(500)
+                throw new Error(error)
+            }
+        });
+    }
     const deletedCard = await VideoCard.findByIdAndDelete(id)
 
     res.status(200).json({

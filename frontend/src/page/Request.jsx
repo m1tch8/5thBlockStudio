@@ -276,12 +276,12 @@ export default function Request(){
             publicKey: 'CiLIpAZrfvaLUjNb3',
         })
         .then(() => {
-            console.log('SUCCESS!')
+            console.log('emailJS: Email Sent')
             setSubmitStatus(true)
             setIsLoading(false)
         },
         (error) => {
-            console.log('FAILED...', error.text)
+            console.error('emailJS: Unable to send email...', error.text)
             setSubmitError({error: true, errorMsg: 'There is something wrong. Unable to send request.'})
             setIsLoading(false)
         },

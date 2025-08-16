@@ -125,22 +125,21 @@ export default function ContentsPage({setIsLoading}){
 
         // Runs http request twice if token expired to generate new token
         do {
-            console.log(statusError)
             let token = statusError === 401 ? await refresh() : accessToken
-
+            console.log(token)
             // updating data from the API (highlight attribute to be specific)
-            await api.put(`/content/${id}?highlight=true`,{
+            await api.put(`/content/${id}?highlight=true`, {}, {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json'
                 }
             })
             .then(result => {
                 setContent(prev => prev.map(content => content._id === id ? result.data : content)) //updates data state that also trigger re-render and updates the UI
                 setIsError(false)
-                setOpen(true)
                 setStatuMessage(result.data.highlight ? "Added to Highlights" : "Removed to Highlights")
                 x-- // stops the loop if request status is 200
+                console.log(result)
             })
             .catch(err => {
                 let errMessage = err.response?.data.message
@@ -151,7 +150,7 @@ export default function ContentsPage({setIsLoading}){
                     x-- // stops the loop if not Unauthorized
                 }
                 if (statusError === 401 && x === 1){
-                    logout()   //Logouts after the request takes two Unauthorized request
+                    /* logout() */   //Logouts after the request takes two Unauthorized request
                                 //This means it is unable to generate new accessToken
                                 //Refresh token expired
                 }
@@ -355,6 +354,7 @@ export default function ContentsPage({setIsLoading}){
             fontWeight: '800',
             marginTop: '10px'
         }} className="headings">HIGHLIGHTED</h4>
+        
 
         <div className="highlighted" style={{marginBottom: '30px'}}>
             {toDisplayHighlightedContent}

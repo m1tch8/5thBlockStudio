@@ -20,6 +20,6 @@ router.get("/logout", logoutUser)
 router.get("/current", validateToken, currentUser)
 router.put("/change-password", validateToken, changePassword)
 router.put("/update", validateToken, updateUser)
-router.delete("/:id", deleteUser)
+router.delete("/:id", contentPermission, deleteUser)
 
 export default router

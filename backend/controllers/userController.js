@@ -1,9 +1,7 @@
 import asyncHandler from "express-async-handler"
 import User from "../models/userModel.js";
-import RefreshTokens from "../models/refreshTokenModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import TokenBlacklist from "../models/tokenBlacklistModel.js";
 
 //GET
 //Gets all the USERS data

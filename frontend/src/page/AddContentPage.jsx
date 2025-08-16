@@ -183,6 +183,8 @@ function VideoFileSection({setIsLoading}){
     const [statusMessage, setStatusMessage]= useState()    // set Snackbar Alert Message
     const [isError, setIsError] = useState() 
     const api = useAPI()
+    const {accessToken, logout, refresh} = useAuth()
+
     function onDragOverHandle(e){
         e.preventDefault()
         setDrag(true)
@@ -238,25 +240,52 @@ function VideoFileSection({setIsLoading}){
         formData.append('title', title)
         formData.append('category', category)
 
-        await api.post('/content/video-upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        }})
-        .then(response =>{
-            console.log(response)
-            setIsError(false)
-            setStatusMessage("Content has been added successfully.")
-        })
-        .catch(err=>{
-            console.error(err.response.data)
-            setIsError(true)
-            if (err.status === 400){
-                setStatusMessage("All fields are required")
-            }
-            else{
-                setStatusMessage("Unable to add content. Internal Error")
-            }
-        })
+        let x = 2
+        let statusError
+        do{
+            let token = statusError === 401 ? await refresh() : accessToken
+            //Creates content data from API
+            await api.post('/content/video-upload', formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+            }})
+            .then(response =>{
+                console.log(response)
+                setIsError(false)
+                setStatusMessage("Content has been added successfully.")
+                x--
+            })
+            .catch(err=>{
+                let errMessage = err.response?.data.message
+                statusError = err.response.status
+                console.error(errMessage)
+                setIsError(true)
+                
+                if (!statusError === 401){
+                    x-- // stops the loop if there's no error
+                }
+                if (statusError === 401 && x === 1){
+                    logout()   //Logouts after the request takes two Unauthorized request
+                                //This means it is unable to generate new accessToken
+                                //Refresh token expired or didn't exist
+                }
+                else{
+                    //sets status message to be displayed in the Snackbar Alert
+                    if (errMessage.includes("validation failed")){
+                        setStatusMessage("All fields are required.")
+                    }
+                    else if (errMessage.includes("duplicate key")){
+                        setStatusMessage("Content is already been added")
+                    }
+                    else{
+                        setStatusMessage("There is an internal error.")
+                    }
+                }
+            })
+            x--
+        }while(x > 0)
+            
         setIsLoading(false)
         setOpen(true)
         setTitle('')

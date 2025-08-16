@@ -88,7 +88,8 @@ export const createVideoCard = asyncHandler(async (req,res)=>{
     
 export const uploadVideo = asyncHandler(async (req,res)=>{
     const file = req.file
-    const {title, category} = req.body;
+    const title = req.title;
+    const category = req.category;
     if (!title || !category){
         res.status(400)
         throw new Error("All fields are required")

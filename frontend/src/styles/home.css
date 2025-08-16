@@ -76,6 +76,7 @@
     grid-template-columns: auto auto auto auto;
 }
 
+/* FEATURED CARD */
 .featured-card{
     width: 100%;
     height: 100%;
@@ -120,11 +121,6 @@
 .featured-vid-container:hover button{
     display: block;
 }
-@media (max-width: 1050px) {
-  .ytvid-container button{
-    display: block;
-  }
-}
 
 @media (max-width: 1050px) {
 
@@ -159,6 +155,9 @@
     /* FEATURED RESPONSIVE */
     .featured-container{
         flex-direction: column;
+    }
+    .featured-vid-container{
+        aspect-ratio: 16/9;
     }
     .main{
         width: 100%;

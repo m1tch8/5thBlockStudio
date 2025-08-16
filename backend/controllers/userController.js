@@ -23,6 +23,7 @@ export const currentUser = asyncHandler(async (req,res)=>{
 //Register User
 export const registerUser = asyncHandler(async (req,res) =>{
     const {username, email, password, role} = req.body;
+    console.log(role)
     if(!username ||!email||!password){
         res.status(400)
         throw new Error("All fields are required");
@@ -32,11 +33,8 @@ export const registerUser = asyncHandler(async (req,res) =>{
         username,
         email,
         password: hashedPassword,
+        role
     });
-    if(role){
-        newUser.role = role;
-        await newUser.save();
-    }
     res.status(200).json(newUser);
 })
 
@@ -235,6 +233,15 @@ export const updateUser = asyncHandler(async (req, res) => {
     
 })
 
+//Delete
+export const deleteUser = asyncHandler(async (req, res) => {
+    const id = req.params.id
+    
+    const userDeleted = await User.findByIdAndDelete(id);
+
+    res.status(200).json(userDeleted)
+    
+})
 
 
 export default getUser;

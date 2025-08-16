@@ -23,14 +23,9 @@
     position: absolute;
     display: none;
     top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); 
-  z-index: 3;
-}
-@media (max-width: 1050px) {
-  .ytvid-container button{
-    display: block;
-  }
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    z-index: 3;
 }
 .ytvid-container p{
     position: absolute;

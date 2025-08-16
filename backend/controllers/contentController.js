@@ -1,12 +1,7 @@
 import asyncHandler from "express-async-handler"
 import VideoCard from "../models/videoCardModel.js"
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { request } from "express"
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { v2 as cloudinary } from 'cloudinary';
+import streamifier from 'streamifier'
 
 //GET
 //Getting data of VideoCard
@@ -85,6 +80,62 @@ export const createVideoCard = asyncHandler(async (req,res)=>{
     })
 });
 
+    
+export const uploadVideo = asyncHandler(async (req,res)=>{
+    const file = req.file
+    const {title, category} = req.body;
+    if (!file){
+        throw new Error("No video uploaded or wrong file type.")
+    }
+
+    let url
+    
+    cloudinary.config({ 
+        cloud_name: 'dhxdwsngf', 
+        api_key: '646751556789485', 
+        api_secret: 'GDWsKhT707MX6G9j2CIN7KV4gxc' // Click 'View API Keys' above to copy your API secret
+    });
+
+    try {
+        
+        const stream = cloudinary.uploader.upload_stream({
+            resource_type: 'video', // Important for videos
+        },
+        async(error, result) => {
+            if (error) {
+                console.error('Cloudinary error:', error);
+                return res.status(500).send('Upload failed.');
+            }
+            // Generate optimized URL using transformation
+            const optimizedUrl = cloudinary.url(result.public_id, {
+                resource_type: 'video',
+                transformation: [
+                    { quality: 'auto:eco', fetch_format: 'auto', width: 720 }
+                ]
+            });
+            console.log({ optimizedUrl });
+
+            const videoCard = await VideoCard.create({
+                title,
+                category,
+                videoId: optimizedUrl,
+                siValue: optimizedUrl,
+                type: "file"
+            })
+            res.status(200).json({
+                success: true,
+                videoCard
+            })
+        });
+        // Pipe buffer to cloudinary
+        streamifier.createReadStream(file.buffer).pipe(stream);
+        
+    } catch (err) {
+        console.error('Unexpected error:', err);
+        res.status(500).send('Unexpected server error.');
+    }
+});
+
 export const createVideoCardFile = asyncHandler(async (req,res)=>{
 
     const {title, category} = req.body;
@@ -126,6 +177,8 @@ export const createVideoCardFile = asyncHandler(async (req,res)=>{
         },
     }); */
 })
+
+
 
 //PUT
 //UPDATE VideoCards
@@ -196,23 +249,9 @@ export const deleteVideoCard = asyncHandler(async (req,res)=>{
     }
 
     const type = vidCard.type;
-    const filename = vidCard.siValue;
+    
     if(type === "file"){
-        const filePath = path.join(__dirname, '../uploads/videos', filename);
-
-        fs.access(filePath, fs.constants.F_OK, (err) => {
-            if (err) {
-                res.status(404)
-                throw new Error('File not found')
-            }
-
-            fs.unlink(filePath, (unlinkErr) => {
-                if (unlinkErr) {
-                    res.status(500)
-                    throw new Error('Error deleting file')
-                }
-            });
-        });
+        
     }
 
     const deletedCard = await VideoCard.findByIdAndDelete(id)

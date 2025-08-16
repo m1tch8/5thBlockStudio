@@ -6,18 +6,20 @@ import getUser, {
     currentUser, 
     refresh, 
     changePassword, 
-    updateUser } 
+    updateUser, 
+    deleteUser} 
     from "../controllers/userController.js"
 import validateToken,{contentPermission, validateRefreshToken} from "../middleware/userAuth.js"
 const router = express.Router();
 
 router.get("/", getUser)
-router.post("/register", contentPermission, registerUser)
+router.post("/register", registerUser)
 router.get("/refresh", validateRefreshToken, refresh)
 router.post("/login", loginUser)
 router.get("/logout", logoutUser)
 router.get("/current", validateToken, currentUser)
 router.put("/change-password", validateToken, changePassword)
 router.put("/update", validateToken, updateUser)
+router.delete("/:id", deleteUser)
 
 export default router

@@ -3,7 +3,6 @@ import Footer from "../Components/Footer"
 import MusicCard from "../Components/MusicCard.jsx"
 import FloatingIcons from "../Components/FloatingIcons.jsx"
 import '../styles/home.css'
-import axios from "axios"
 import { useState, useEffect } from "react"
 import VidCard from "../Components/VidCard.jsx"
 import { useNavigate } from "react-router-dom"

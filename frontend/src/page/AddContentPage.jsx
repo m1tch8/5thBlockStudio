@@ -238,7 +238,7 @@ function VideoFileSection({setIsLoading}){
         formData.append('title', title)
         formData.append('category', category)
 
-        await api.post('/content/upload-video', formData, {
+        await api.post('/content/video-upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         }})

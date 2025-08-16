@@ -95,10 +95,10 @@ export const loginUser = asyncHandler(async (req,res) =>{
             }); */
 
             //Adds Refresh Token to Cookie
-            res.cookie('fifthBlockStudioRefreshToken', refreshToken, {
+            res.cookie('jwt', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production" ,
-                sameSite: 'Lax',
+                sameSite: 'Strict',
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })
 
@@ -124,12 +124,12 @@ export const loginUser = asyncHandler(async (req,res) =>{
 export const refresh = asyncHandler(async(req, res) =>{
     const cookies = req.cookies;
 
-    if (!cookies?.fifthBlockStudioRefreshToken) {
+    if (!cookies?.jwt) {
         res.status(401);
         throw new Error("Unauthorized");
     }
 
-    const refreshToken = cookies.fifthBlockStudioRefreshToken;
+    const refreshToken = cookies.jwt;
     let newAccessToken;
     let role;
     try{
@@ -154,13 +154,13 @@ export const refresh = asyncHandler(async(req, res) =>{
 //Logout User
 export const logoutUser = asyncHandler(async (req, res) => {
     const cookies = req.cookies;
-    if (!cookies.fifthBlockStudioRefreshToken){
+    if (!cookies.jwt){
         return res.status(204).json({message: "No Content"})
     }
 
-    res.clearCookie('fifthBlockStudioRefreshToken', {
+    res.clearCookie('jwt', {
         httpOnly: true,
-        sameSite: 'Lax',
+        sameSite: 'Strict',
         secure: process.env.NODE_ENV === production
     });
     
@@ -216,10 +216,10 @@ export const updateUser = asyncHandler(async (req, res) => {
     },process.env.REFRESH_TOKEN_SECRET,{expiresIn:'1d'});
 
     //Adds Refresh Token to Cookie
-    res.cookie('fifthBlockStudioRefreshToken', refreshToken, {
+    res.cookie('jwt', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === production ,
-        sameSite: 'Lax',
+        sameSite: 'Strict',
         maxAge: 7 * 24 * 60 * 60 * 1000
     })
     

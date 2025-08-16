@@ -84,11 +84,6 @@ export const createVideoCard = asyncHandler(async (req,res)=>{
 export const uploadVideo = asyncHandler(async (req,res)=>{
     const file = req.file
     const {title, category} = req.body;
-    console.log({
-        CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
-        API_KEY: process.env.CLOUDINARY_API_KEY,
-        API_SECRET: process.env.CLOUDINARY_API_SECRET
-    });
     
     if (!title || !category){
         res.status(400)

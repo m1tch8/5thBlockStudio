@@ -1,7 +1,5 @@
 import { createContext, useEffect, useContext, useState, use } from "react";
 import useAPI from "../Hooks/useAPI";
-import axios from 'axios'
-import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
@@ -11,7 +9,6 @@ export function AuthProvider(props){
     const [isAuthenticated, setIsAuthenticated] = useState(null)
     const [accessToken, setAccessToken] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const navigate = useNavigate()
 
     const api = useAPI();
 

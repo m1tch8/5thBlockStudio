@@ -1,13 +1,8 @@
 import asyncHandler from "express-async-handler"
 import VideoCard from "../models/videoCardModel.js"
-import { v2 as cloudinary } from 'cloudinary';
 import streamifier from 'streamifier'
+import cloudinary from "../config/cloudinary.js"
 
-cloudinary.config({ 
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-    api_key: process.env.CLOUDINARY_API_KEY, 
-    api_secret: process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
-});
 
 //GET
 //Getting data of VideoCard
@@ -88,8 +83,13 @@ export const createVideoCard = asyncHandler(async (req,res)=>{
     
 export const uploadVideo = asyncHandler(async (req,res)=>{
     const file = req.file
-    const title = req.title;
-    const category = req.category;
+    const {title, category} = req.body;
+    console.log({
+        CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+        API_KEY: process.env.CLOUDINARY_API_KEY,
+        API_SECRET: process.env.CLOUDINARY_API_SECRET
+    });
+    
     if (!title || !category){
         res.status(400)
         throw new Error("All fields are required")
@@ -210,7 +210,7 @@ export const deleteVideoCard = asyncHandler(async (req,res)=>{
             resource_type: 'video',
             invalidate: true
         }, function(error, result) {
-
+            
             if (result.result === 'not found' || result === 'not found') {
                 res.status(404)
                 throw new Error("Not found")

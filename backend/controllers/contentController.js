@@ -197,24 +197,25 @@ export const deleteVideoCard = asyncHandler(async (req,res)=>{
         res.status(404)
         throw new Error("Vid card not found")
     }
-
-    const type = vidCard.type;
+    const {type, siValue} = vidCard;
     
     if(type === "file"){
-        await cloudinary.uploader.destroy('ra4ysi8bik471mlfodad', {
-            resource_type: 'video',
-            invalidate: true
-        }, function(error, result) {
-            
-            if (result.result === 'not found' || result === 'not found') {
+        try{
+            const result = await cloudinary.uploader.destroy(siValue, {
+                resource_type: 'video',
+                invalidate: true
+            });
+
+            if (result.result === 'not found') {
                 res.status(404)
-                throw new Error("Not found")
+                throw new Error("Video not found")
             }
-            if (error){
-                res.status(500)
-                throw new Error(error)
-            }
-        });
+        }
+        catch(err){
+            res.status(500)
+            console.error('Cloudinary error: ', err)
+            throw new Error("Failed to delete video from Cloudinary")
+        }
     }
     const deletedCard = await VideoCard.findByIdAndDelete(id)
 

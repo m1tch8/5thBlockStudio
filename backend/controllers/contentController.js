@@ -67,10 +67,10 @@ export const createVideoCard = asyncHandler(async (req,res)=>{
     data.type = "youtube"
     
     try{
-        const vCard = await VideoCard.create(data)
+        const videoCard = await VideoCard.create(data)
         res.status(200).json({
         success: true,
-        vCard
+        videoCard
     })
     }
     catch(err){

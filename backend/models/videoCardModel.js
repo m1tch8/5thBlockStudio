@@ -17,7 +17,6 @@ const videoCardSchema = mongoose.Schema({
     category: {
         type: String,
         required: true,
-        default: "no category"
     },
     highlight:{
         type: Boolean,

@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react"
-import LoadingScreen from "../Components/LoadingScreen"
 import useAuth from "../Hooks/useAuth"
 import useAPI from "../Hooks/useAPI"
 import StatusModal from '../Components/StatusModal'
 
 
-function YoutubeSection({contentFieldsRef, setIsLoading}){
+function YoutubeSection({contentFieldsRef, setIsLoading, categories, setContent}){
     const [fields, setFields] = useState(contentFieldsRef.current) // auto saves values in fields even when page changes
     const [open, setOpen] = useState(false)                // set open for Snackbar Alert
     const [statusMessage, setStatusMessage]= useState()    // set Snackbar Alert Message
@@ -44,6 +43,7 @@ function YoutubeSection({contentFieldsRef, setIsLoading}){
                 }
             })
             .then(response =>{
+                setContent(prev => [...prev, response.data.videoCard])
                 clear()
                 setStatusMessage("Content has been added successfully.")
                 setIsError(false)
@@ -144,7 +144,7 @@ function YoutubeSection({contentFieldsRef, setIsLoading}){
 
         setOpen(false)
     }
-
+    
     return(
         <>
         
@@ -153,7 +153,13 @@ function YoutubeSection({contentFieldsRef, setIsLoading}){
                 <form action="" onSubmit={submitHandle}>
                     <textarea name="" id="" placeholder="Embed Link" onChange={embedOnChange} value={fields.embedLink}></textarea> <br />
                     <input type="text" placeholder="Title"  onChange={titleOnChange} value={fields.title}/> <br />
-                    <input type="text" placeholder="Category" onChange={categoryOnChange} value={fields.category}/> <br />
+                    <label for="category"></label>
+                    <input type="text" list="category" placeholder="Category" onChange={categoryOnChange} value={fields.category}/> <br />
+                    <datalist id="category">
+                        {categories &&
+                            categories.map(category => <option value={category}/>)
+                        }
+                    </datalist>
                     <input type="submit" value={"Add"} className="white-btn"/>
                 </form>
             </div>
@@ -173,17 +179,23 @@ function YoutubeSection({contentFieldsRef, setIsLoading}){
     )
 }
 
-function VideoFileSection({setIsLoading}){
+function VideoFileSection({setIsLoading, categories, contentFieldsRef2, setContent}){
+    const [fields, setFields] = useState(contentFieldsRef2.current) 
     const [drag, setDrag] = useState()
-    const [videoFile, setVideoFile] = useState(null)
-    const [title, setTitle] = useState()
-    const [category, setCategory] = useState()
     const [open, setOpen] = useState(false)                // set open for Snackbar Alert
     const [statusMessage, setStatusMessage]= useState()    // set Snackbar Alert Message
     const [isError, setIsError] = useState() 
     const api = useAPI()
     const {accessToken, logout, refresh} = useAuth()
 
+    function clear(){
+        contentFieldsRef2.current = {
+            videoFile: null,
+            title: '',
+            category: ''
+        }
+        setFields(contentFieldsRef2.current)
+    }
     function onDragOverHandle(e){
         e.preventDefault()
         setDrag(true)
@@ -201,42 +213,26 @@ function VideoFileSection({setIsLoading}){
         if (!file) return
 
         if (!file.type.startsWith('video/')) {
-        setVideoFile(null)
-        return
-        }
-
-        const previewURL = URL.createObjectURL(file)
-        setVideoFile({
-        file,
-        preview: previewURL,
-        })
-        
-    }
-
-    function fileOnChange(e){
-        const file = e.target.files[0]
-
-        if (!file) return
-
-        if (!file.type.startsWith('video/')) {
-            setVideoFile(null)
+            setFields({...fields, videoFile: null})
             return
         }
+
         const previewURL = URL.createObjectURL(file)
-        setVideoFile({
+        setFields({...fields, videoFile: {
             file: file,
             preview: previewURL,
-        })
-
+        }})
+        
     }
+    
     async function formSubmitHandle(e){
         setIsLoading(true)
         setOpen(false)
         e.preventDefault()
         const formData = new FormData()
-        formData.append('video', videoFile?.file)
-        formData.append('title', title)
-        formData.append('category', category)
+        formData.append('video', fields.videoFile?.file)
+        formData.append('title', fields.title)
+        formData.append('category', fields.category)
 
         let x = 2
         let statusError
@@ -249,9 +245,12 @@ function VideoFileSection({setIsLoading}){
                 'Content-Type': 'multipart/form-data',
             }})
             .then(response =>{
+                //setContent(prev => [...prev, response.data.videoCard])
+                console.log(response)
                 setIsError(false)
                 setStatusMessage("Content has been added successfully.")
                 x--
+                clear()
             })
             .catch(err=>{
                 let errMessage = err.response?.data.message
@@ -285,24 +284,44 @@ function VideoFileSection({setIsLoading}){
             
         setIsLoading(false)
         setOpen(true)
-        setTitle('')
-        setCategory('')
-        setVideoFile(null)
         
     }
+    function fileOnChange(e){
+        const file = e.target.files[0]
+
+        if (!file) return
+
+        if (!file.type.startsWith('video/')) {
+            setFields({...fields, videoFile: null})
+            return
+        }
+        const previewURL = URL.createObjectURL(file)
+        setFields({...fields, videoFile: {
+            file: file,
+            preview: previewURL,
+        }})
+
+        contentFieldsRef2.current.videoFile = {
+            file: file,
+            preview: previewURL,
+        }
+    }
     function titleOnChange(e){
-        setTitle(e.target.value)
+        setFields({...fields, title: e.target.value})
+        contentFieldsRef2.current.title = e.target.value
     }
     function categoryOnChange(e){
-        setCategory(e.target.value)
+        setFields({...fields, category: e.target.value})
+        contentFieldsRef2.current.category = e.target.value
     }
-    useEffect(() => {
+    /* useEffect(() => {
+
         return () => {
             if (videoFile?.preview) {
                 URL.revokeObjectURL(videoFile.preview)
             }
         }
-    }, [videoFile])
+    }, [videoFile]) */
 
     // handleClose for SnackBar Alert
     const handleClose = (event, reason) => {
@@ -318,8 +337,13 @@ function VideoFileSection({setIsLoading}){
         <div className="add-content-page" >
             <div className="input-area">
                 <form action="" onSubmit={formSubmitHandle}>
-                    <input type="text" placeholder="Title" name="title" onChange={titleOnChange} value={title}/> <br />
-                    <input type="text" placeholder="Category" name="category" onChange={categoryOnChange} value={category}/> <br />
+                    <input type="text" placeholder="Title" name="title" onChange={titleOnChange} value={fields.title}/> <br />
+                    <input type="text" list="category" placeholder="Category" name="category" onChange={categoryOnChange} value={fields.category}/> <br />
+                    <datalist id="category">
+                        {categories &&
+                            categories.map(category => <option value={category}/>)
+                        }
+                    </datalist>
                     <input type="submit" value={"Add"} className="white-btn"/>
                 </form>
             </div>
@@ -328,7 +352,7 @@ function VideoFileSection({setIsLoading}){
                     <input type="file" id="input-file" accept="video/*" onChange={fileOnChange} hidden/>
                     <div className="drop-area" onDragOver={onDragOverHandle} onDragLeave={onDragLeaveHandle} onDrop={onDropHandle}>
                     
-                        {!videoFile ? (!drag ? 
+                        {!fields.videoFile ? (!drag ? 
                         <>
                         <p>Click here to upload video file</p>
                         <p>or Drag file here</p>
@@ -336,12 +360,15 @@ function VideoFileSection({setIsLoading}){
                         :
                         <p>Drop here</p>)
                         :
-                        <video src={ videoFile && videoFile.preview} type={ videoFile && videoFile.file.type} controls>
+                        <video src={ fields.videoFile && fields.videoFile.preview} type={ fields.videoFile && fields.videoFile.file.type} controls>
                         </video>
                         }
                     </div>
                 </label>
-                {videoFile && <div className="x" onClick={()=>{setVideoFile(null)}}>x</div>}
+                {fields.videoFile && <div className="x" onClick={()=>{
+                        setFields({...fields, videoFile: null})
+                        contentFieldsRef2.current.videoFile = null
+                    }}>x</div>}
             </div>
         </div>
         <StatusModal open={open} handleClose={handleClose} isError={isError} statusMessage={statusMessage}/>
@@ -349,8 +376,35 @@ function VideoFileSection({setIsLoading}){
     )
 }
 
-export default function AddContentPage({contentFieldsRef, setIsLoading}){
+export default function AddContentPage({contentFieldsRef, contentFieldsRef2, setIsLoading}){
     const [toggle, setToggle] = useState(0)
+    const [content, setContent] = useState()
+    const [categories, setCategories] = useState()
+    
+    const api = useAPI()
+    
+    async function loadContent(){
+        setIsLoading(true)
+        await api.get("/content")
+        .then(result=>{
+            setContent(result.data);
+        })
+        .catch(err=>{
+            console.error(err)
+        })
+
+        setIsLoading(false)
+    }
+
+    useEffect(()=>{
+        loadContent()
+        
+    },[])
+    useEffect(()=>{
+        const tmpCategories = content ? [...new Set(content.map(item => item.category))].sort() : null
+        setCategories(tmpCategories)
+    },[content])
+
     return(
         <>
             <div className="add-content-btn">
@@ -358,9 +412,9 @@ export default function AddContentPage({contentFieldsRef, setIsLoading}){
                 <button onClick={()=>{setToggle(1)}} data-highlight={toggle === 1}>Upload Video File</button>
             </div>
             {toggle === 0 ? 
-                <YoutubeSection contentFieldsRef={contentFieldsRef} setIsLoading={setIsLoading}/>
+                <YoutubeSection contentFieldsRef={contentFieldsRef} setIsLoading={setIsLoading} categories={categories} setContent={setContent}/>
                 :
-                <VideoFileSection setIsLoading={setIsLoading}/>
+                <VideoFileSection contentFieldsRef2={contentFieldsRef2} setIsLoading={setIsLoading} categories={categories} setContent={setContent}/>
             }
         </>
     )

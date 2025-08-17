@@ -30,13 +30,9 @@ function SideBar(prop){
 export default function Admin(){
     const [onDisplay, setOnDisplay] = useState("Contents")
     const [isLoading, setIsLoading] = useState(false)
-    const contentFieldsRef = useRef({
-        embedLink: '',
-        title: '',
-        category: '',
-        videoId: '',
-        siValue: ''
-    })
+    const contentFieldsRef = useRef({})
+    const contentFieldsRef2 = useRef({})
+
     
     
     function onDisplayHandle(e){
@@ -51,6 +47,7 @@ export default function Admin(){
             break
         case "Add Content":
             pageOnDisplay = <AddContentPage contentFieldsRef={contentFieldsRef} 
+                                            contentFieldsRef2={contentFieldsRef2}
                                             setIsLoading={setIsLoading}
                                             />
             break

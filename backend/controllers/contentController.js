@@ -167,6 +167,7 @@ export const updateVideoCard = asyncHandler(async (req,res)=>{
         res.status(200).json(videoCard)
         return
     }
+    
     if(!id){
         res.status(404)
         throw new Error("Id parameter is required")

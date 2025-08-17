@@ -13,7 +13,9 @@ const getUser = asyncHandler(async (req,res) =>{
 //GET
 //Gets current logged User 
 export const currentUser = asyncHandler(async (req,res)=>{
-    res.status(200).json(req.user);
+    const id = req.user.id
+    const user = await User.findById(id).select('id username email role')
+    res.status(200).json(user);
 })
 
 //POST

@@ -272,8 +272,8 @@ export default function Request(){
 
     async function submitRequest(){
         
-        await emailjs.sendForm("service_t50laqt", 'template_wi4fan5', form.current,{
-            publicKey: 'CiLIpAZrfvaLUjNb3',
+        await emailjs.sendForm("service_hfbpizs", 'template_9xkv5td', form.current,{
+            publicKey: 'D1ksV0CoBophGNAA9',
         })
         .then(() => {
             console.log('emailJS: Email Sent')

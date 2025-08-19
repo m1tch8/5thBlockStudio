@@ -46,13 +46,19 @@ export const getVideoCard = asyncHandler(async (req,res)=>{
 //GET
 //Individual VideoCard
 export const IndividualVideoCard = asyncHandler(async (req,res)=>{
-    
-    const vCards = await VideoCard.findById(req.params.id)
-    if(!vCards){
-        res.status(404)
-        throw new Error("Video Cards not Found")
+    try{
+        const vCards = await VideoCard.findById(req.params.id)
+        if(!vCards){
+            res.status(404)
+            throw new Error("Video Cards not Found")
+        }
+        res.json(vCards)
     }
-    res.json(vCards)
+    catch(err){
+        res.status(500)
+        throw new Error(err.message)
+    }
+    
 })
 
 //GET

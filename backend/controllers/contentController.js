@@ -18,10 +18,23 @@ export const getVideoCard = asyncHandler(async (req,res)=>{
     let vCards
 
     if (query.highlight){
-        vCards = await VideoCard.find(query).sort({order: 1, createdAt: -1})
+        try{
+            vCards = await VideoCard.find(query).sort({order: 1, createdAt: -1})
+
+        }
+        catch(err){
+            res.status(500)
+            throw new Error("Server Error")
+        }
     }
     else{
-        vCards = await VideoCard.find().sort({order: 1, createdAt: -1})
+        try{
+            vCards = await VideoCard.find().sort({order: 1, createdAt: -1})
+        }
+        catch(err){
+            res.status(500)
+            throw new Error("Server Error")
+        }
     }
     if(!vCards){
         res.status(404)
